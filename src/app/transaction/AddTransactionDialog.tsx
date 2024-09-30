@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-// import { Label } from "@/components/ui/label";
 import {
 	Dialog,
 	DialogContent,
@@ -14,6 +13,7 @@ import {
 import {
 	Select,
 	SelectContent,
+	SelectGroup,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
@@ -38,7 +38,7 @@ const transactionFormSchema = z.object({
 	type: z.enum(["Income", "Expense"], {
 		required_error: "Type is required",
 	}),
-	category: z.enum(["Project Completion", "Service Sale", "Salary"], {
+	category: z.string({
 		required_error: "Category is required",
 	}),
 	amount: z.number().nonnegative(),
@@ -58,13 +58,6 @@ export default function AddTransactionDialog({
 }: AddTransactionDialogProps) {
 	const form = useForm<TransactionForm>({
 		resolver: zodResolver(transactionFormSchema),
-		defaultValues: {
-			date: "",
-			type: "Income", // Set default values if needed
-			category: "Project Completion",
-			amount: 0,
-			department: "Development",
-		},
 	});
 
 	const onSubmit = (values: TransactionForm) => {
@@ -74,6 +67,13 @@ export default function AddTransactionDialog({
 	};
 
 	const [open, setOpen] = useState(false);
+	const [transactionType, setTransactionType] = useState<
+		"Income" | "Expense" | null
+	>(null);
+
+	// Categories based on type
+	const incomeCategories = ["Project Completion", "Service Sale"];
+	const expenseCategories = ["Salary", "Utilities"];
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -110,7 +110,10 @@ export default function AddTransactionDialog({
 									<FormLabel>Type</FormLabel>
 									<FormControl>
 										<Select
-											onValueChange={field.onChange}
+											onValueChange={(value) => {
+												field.onChange(value);
+												setTransactionType(value as "Income" | "Expense");
+											}}
 											defaultValue={field.value}
 										>
 											<SelectTrigger className="w-[280px]">
@@ -137,18 +140,30 @@ export default function AddTransactionDialog({
 										<Select
 											onValueChange={field.onChange}
 											defaultValue={field.value}
+											disabled={!transactionType} // Disable if no type is selected
 										>
 											<SelectTrigger className="w-[280px]">
 												<SelectValue placeholder="Select a category" />
 											</SelectTrigger>
 											<SelectContent>
-												<SelectItem value="Project Completion">
-													Project Completion
-												</SelectItem>
-												<SelectItem value="Service Sale">
-													Service Sale
-												</SelectItem>
-												<SelectItem value="Salary">Salary</SelectItem>
+												{transactionType === "Income" && (
+													<SelectGroup>
+														{incomeCategories.map((category) => (
+															<SelectItem key={category} value={category}>
+																{category}
+															</SelectItem>
+														))}
+													</SelectGroup>
+												)}
+												{transactionType === "Expense" && (
+													<SelectGroup>
+														{expenseCategories.map((category) => (
+															<SelectItem key={category} value={category}>
+																{category}
+															</SelectItem>
+														))}
+													</SelectGroup>
+												)}
 											</SelectContent>
 										</Select>
 									</FormControl>
