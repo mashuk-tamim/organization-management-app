@@ -18,5 +18,10 @@ export const signupFormSchema = z.object({
 		.max(40, {
 			message: "Password cannot exceed 40 characters.",
 		}),
+	gender: z.enum(["male", "female"], {
+		errorMap: () => ({ message: "Gender must be either male or female" }),
+	}),
+	contactNumber: z.string().min(1, { message: "Contact number is required" }),
+	profileImg: z.string().url().optional(),
 });
 
