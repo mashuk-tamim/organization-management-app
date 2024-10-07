@@ -1,5 +1,5 @@
 import User from "@/backend/modules/user/user.model";
-import connect from "@/backend/config/db";
+import connect from "@/backend/utils/db";
 import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
 

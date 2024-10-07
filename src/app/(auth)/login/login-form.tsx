@@ -1,15 +1,15 @@
-"use client"
-import Link from "next/link"
+"use client";
+import Link from "next/link";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
 import {
 	Form,
@@ -24,14 +24,50 @@ import { loginFormSchema } from "@/validation/login.schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { signIn, useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
+
 export function LoginForm() {
+	const [errorMessage, setErrorMessage] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
+	const session = useSession();
+	const router = useRouter();
+
+	useEffect(() => {
+		console.log(session.status);
+		if (session.status === "authenticated") {
+			console.log("I want to navigate to dashboard");
+			// router.push("/dashboard");
+		}
+		if (session.status === "loading") {
+			setIsLoading(true);
+		}
+  }, [session, router]);
+  
 	const form = useForm<z.infer<typeof loginFormSchema>>({
-		resolver: zodResolver(loginFormSchema)
+		resolver: zodResolver(loginFormSchema),
 	});
 
-	function onSubmit(values: z.infer<typeof loginFormSchema>) {
+	async function onSubmit(values: z.infer<typeof loginFormSchema>) {
 		// Do something with the form values.
-		console.log(values);
+		const email = values.email;
+		const password = values.password;
+
+		const res = await signIn("credentials", {
+			redirect: false,
+			email,
+			password,
+		});
+
+		console.log(res);
+		if (res?.error) {
+			setErrorMessage("Invalid email or password");
+			console.log(res.error);
+		} else {
+			setErrorMessage("");
+		}
 	}
 	return (
 		<Card className="mx-auto max-w-md">
@@ -71,13 +107,21 @@ export function LoginForm() {
 							)}
 						/>
 						<Button type="submit" className="w-full">
-							Create an account
+							{isLoading ? "Loading..." : "Login"}
 						</Button>
-						<Button variant="outline" className="w-full">
-							Sign up with Google
+						<Button
+							onClick={() => signIn("github")}
+							variant="outline"
+							className="w-full"
+						>
+							Sign in with Github
+							<GitHubLogoIcon className="ml-2" />
 						</Button>
 					</form>
 				</Form>
+				<p className="text-sm text-red-500 pt-2">
+					{errorMessage && errorMessage}
+				</p>
 				<div className="mt-4 text-center text-sm">
 					Don&apos;t have an account?{" "}
 					<Link href="/signup" className="underline">

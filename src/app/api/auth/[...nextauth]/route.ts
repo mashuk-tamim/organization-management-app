@@ -2,10 +2,8 @@ import bcrypt from "bcrypt";
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
-// import { Account, User as AuthUser } from "next-auth";
 import User from "@/backend/modules/user/user.model";
-import connect from "@/backend/config/db";
-import { IUser } from "@/backend/modules/user/user.interface";
+import connect from "@/backend/utils/db";
 
 export const authOptions = {
 	// Configure one or more authentication providers
@@ -45,4 +43,5 @@ export const authOptions = {
 	],
 };
 
-export default NextAuth(authOptions);
+export const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };

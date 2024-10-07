@@ -29,9 +29,11 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "./ui/select";
+} from "../../../components/ui/select";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function SignupForm() {
 	const [errorMessage, setErrorMessage] = useState("");
@@ -192,12 +194,18 @@ export default function SignupForm() {
 						<Button type="submit" className="w-full">
 							Create an account
 						</Button>
-						<Button variant="outline" className="w-full">
-							Sign up with Google
+						<Button
+							onClick={() => signIn("github")}
+							variant="outline"
+							className="w-full"
+						>
+							Sign in with Github <GitHubLogoIcon className="ml-2"/>
 						</Button>
 					</form>
 				</Form>
-				<p className="text-sm text-red-500 pt-2">{errorMessage && errorMessage}</p>
+				<p className="text-sm text-red-500 pt-2">
+					{errorMessage && errorMessage}
+				</p>
 				<div className="mt-4 text-center text-sm">
 					Already have an account?{" "}
 					<Link href="/login" className="underline">
