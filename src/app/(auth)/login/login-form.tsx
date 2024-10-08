@@ -109,7 +109,16 @@ export function LoginForm() {
 						<Button type="submit" className="w-full">
 							{isLoading ? "Loading..." : "Login"}
 						</Button>
-						<Button
+            <Button
+              type="submit"
+							onClick={() => signIn("google")}
+							variant="outline"
+							className="w-full"
+						>
+							Sign in with Google
+						</Button>
+            <Button
+              type="submit"
 							onClick={() => signIn("github")}
 							variant="outline"
 							className="w-full"

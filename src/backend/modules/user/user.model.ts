@@ -9,13 +9,6 @@ export const userSchema = new Schema<IUser>(
 			trim: true,
 			minLength: [2, "First name must be at least 2 characters"],
 			maxLength: [30, "First name must be less than or equal to 30 characters"],
-			// validate: {
-			// 	validator: function (value: string) {
-			// 		const firstNameStr = value.charAt(0).toUpperCase() + value.slice(1);
-			// 		return firstNameStr === value;
-			// 	},
-			// 	message: "{VALUE} is not in capitalized format",
-			// },
 		},
 
 		lastName: {
@@ -24,13 +17,6 @@ export const userSchema = new Schema<IUser>(
 			trim: true,
 			minLength: [2, "Last name must be at least 2 characters"],
 			maxLength: [30, "Last name must be less than or equal to 30 characters"],
-			// validate: {
-			// 	validator: function (value: string) {
-			// 		const lastNameStr = value.charAt(0).toUpperCase() + value.slice(1);
-			// 		return lastNameStr === value;
-			// 	},
-			// 	message: "{VALUE} is not in capitalized format",
-			// },
 		},
 
 		email: {
@@ -42,7 +28,8 @@ export const userSchema = new Schema<IUser>(
 
 		password: {
 			type: String,
-			required: [true, "Password is required"],
+      // required: [true, "Password is required"],
+      select: false,
 			minlength: [8, "Password must be more than or equal to 8 characters"],
 		},
 

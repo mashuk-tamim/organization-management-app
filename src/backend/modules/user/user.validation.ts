@@ -9,29 +9,6 @@ const capitalizeValidator = z.custom<string>(
 	{ message: "Value must be capitalized" }
 );
 
-// // Name validation schema
-// const nameValidationSchema = z.object({
-// 	firstName: z
-// 		.string()
-// 		.min(2, { message: "First name must be at least 2 characters" })
-// 		.max(30, {
-// 			message: "First name must be less than or equal to 30 characters",
-// 		})
-// 		.refine((value) => capitalizeValidator.parse(value), {
-// 			message: "First name must be capitalized",
-// 		}),
-
-// 	lastName: z
-// 		.string()
-// 		.min(2, { message: "Last name must be at least 2 characters" })
-// 		.max(30, {
-// 			message: "Last name must be less than or equal to 30 characters",
-// 		})
-// 		.refine((value) => capitalizeValidator.parse(value), {
-// 			message: "Last name must be capitalized",
-// 		}),
-// });
-
 // User validation schema
 export const userValidationSchema = z.object({
 	firstName: z
@@ -69,3 +46,5 @@ export const userValidationSchema = z.object({
 	contactNumber: z.string().min(1, { message: "Contact number is required" }),
 	profileImg: z.string().url().optional(),
 });
+
+export type UserFormData = z.infer<typeof userValidationSchema>;

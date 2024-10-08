@@ -3,11 +3,10 @@
 import Link from "next/link";
 import React from "react";
 import { Button } from "./ui/button";
-import { signOut, useSession } from "next-auth/react";
-import Image from "next/image";
+// import { signOut, useSession } from "next-auth/react";
 
 export default function Navbar() {
-  const { data } = useSession();
+  // const { data } = useSession();
 	// console.log(data);
 	return (
 		<nav className="w-screen flex justify-between gap-4 font-medium py-4 px-10">
@@ -24,7 +23,7 @@ export default function Navbar() {
 				<Link href="/transaction">Transaction</Link>
 			</div>
 			<div className="flex gap-4">
-				{!data ? (
+				
 					<>
 						<Button>
 							<Link href="/login">Login</Link>
@@ -33,8 +32,8 @@ export default function Navbar() {
 							<Link href="/register">Register</Link>
 						</Button>
 					</>
-				) : (
-					<div className="flex gap-2">
+		
+					{/* <div className="flex gap-2">
 						<div className="flex flex-col">
 							<p>{data.user?.name || "user name not available"}</p>
 							<p>{data.user?.email}</p>
@@ -45,8 +44,7 @@ export default function Navbar() {
 							className="size-10 rounded-full border"
 						/>
 						<Button onClick={() => signOut()}>Logout</Button>
-					</div>
-				)}
+					</div> */}
 			</div>
 		</nav>
 	);

@@ -193,7 +193,7 @@ export default function SignupForm() {
 						/>
 						<Button type="submit" className="w-full">
 							Create an account
-						</Button>
+						</Button>/
 						<Button
 							onClick={() => signIn("github")}
 							variant="outline"
