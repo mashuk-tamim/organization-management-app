@@ -20,14 +20,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { z } from 'zod';
-import { signUp, SignUpState } from "@/actions/signup.action";
+import { register, SignUpState } from "@/actions/register.action";
 import { useClientValidation } from "@/hooks/useClientValidation";
 import { userValidationSchema } from "@/backend/modules/user/user.validation";
 import { FormField } from "@/components/ui/form-field";
 import { SubmitButton } from "@/components/ui/submit-button";
 
-export default function SignupForm() {
-  const [state, formAction] = useFormState<SignUpState, FormData>(signUp, null);
+export default function RegisterForm() {
+  const [state, formAction] = useFormState<SignUpState, FormData>(register, null);
   const { errors, validateField } = useClientValidation();
 
   const handleFieldChange = (name: keyof z.infer<typeof userValidationSchema>) =>

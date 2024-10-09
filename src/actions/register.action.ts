@@ -1,6 +1,6 @@
 "use server";
 
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import User from "@/backend/modules/user/user.model";
 import { userValidationSchema } from "@/backend/modules/user/user.validation";
 import connectDB from "@/backend/utils/db";
@@ -16,7 +16,7 @@ export type SignUpState = {
 	}[];
 } | null;
 
-export async function signUp(
+export async function register(
 	prevState: SignUpState,
 	formData: FormData
 ): Promise<SignUpState> {

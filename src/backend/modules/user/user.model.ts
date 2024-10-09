@@ -1,4 +1,4 @@
-import { model, models , Schema } from "mongoose";
+import mongoose, { model, models , Schema } from "mongoose";
 import { IUser } from "./user.interface";
 
 export const userSchema = new Schema<IUser>(
@@ -60,7 +60,8 @@ export const userSchema = new Schema<IUser>(
 	}
 );
 
-const User = models.User ?? model<IUser>("User", userSchema);
+const User = mongoose.models.User || model<IUser>("User", userSchema);
+console.log("User model initialized:", User); // Add this log
 export default User;
 /**
  */
