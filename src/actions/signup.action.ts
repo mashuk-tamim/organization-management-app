@@ -1,5 +1,6 @@
 "use server";
 
+import bcrypt from "bcrypt";
 import User from "@/backend/modules/user/user.model";
 import { userValidationSchema } from "@/backend/modules/user/user.validation";
 import connectDB from "@/backend/utils/db";
@@ -43,6 +44,25 @@ export async function signUp(
 				error: "This email is already registered",
 			};
 		}
+		// Hash the password using bcrypt
+		const hashedPassword = await bcrypt.hash(
+			validatedData.password,
+			Number(process.env.BCRYPT_SALT_ROUND)
+		);
+
+		// Create a new user instance
+		const newUser = new User({
+			firstName: validatedData.firstName,
+			lastName: validatedData.lastName,
+			email: validatedData.email,
+			password: hashedPassword,
+			gender: validatedData.gender,
+			contactNumber: validatedData.contactNumber,
+			profileImg: validatedData.profileImg,
+		});
+
+		// Save the user to the database
+		await newUser.save();
 
 		return {
 			success: true,
@@ -50,6 +70,7 @@ export async function signUp(
 		};
 	} catch (error) {
 		if (error instanceof z.ZodError) {
+			// Return validation errors if schema fails
 			const errors = error.errors.map((err) => ({
 				path: err.path.join("."),
 				message: err.message,
