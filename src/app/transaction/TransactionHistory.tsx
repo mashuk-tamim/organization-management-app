@@ -16,13 +16,14 @@ type TransactionHistoryProps = {
 
 export default function TransactionHistory({
 	transactions,
-	onAddTransaction,
+	// onAddTransaction,
 }: TransactionHistoryProps) {
 	return (
 		<div className="mb-6">
 			<div className="flex justify-between items-center mb-4">
 				<h2 className="text-xl font-semibold">Transaction History</h2>
-				<AddTransactionDialog onAddTransaction={onAddTransaction} />
+        {/* <AddTransactionDialog onAddTransaction={onAddTransaction} /> */}
+        <AddTransactionDialog/>
 			</div>
 			<Table>
 				<TableHeader>

@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
 	Dialog,
 	DialogContent,
@@ -19,45 +18,48 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { PlusIcon } from "lucide-react";
-import { Transaction } from "./types";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
-import { transactionValidationSchema } from "@/backend/modules/transaction/transaction.validation";
+// import { TransactionState, addTransaction } from "@/actions/transaction.action";
+import { SubmitButton } from "@/components/ui/submit-button";
+import { useFormState } from "react-dom";
+import { addTransaction, TransactionState } from "@/actions/transaction.action";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
-type TransactionForm = z.infer<typeof transactionValidationSchema>;
+// type TransactionForm = z.infer<typeof transactionValidationSchema>;
 
-type AddTransactionDialogProps = {
-	onAddTransaction: (transaction: Omit<Transaction, "id">) => void;
-};
-
-export default function AddTransactionDialog({
-	onAddTransaction,
-}: AddTransactionDialogProps) {
-	const form = useForm<TransactionForm>({
-		resolver: zodResolver(transactionValidationSchema),
-	});
-
-	const onSubmit = (values: TransactionForm) => {
-		onAddTransaction(values);
-		setOpen(false);
-		console.log(values);
-	};
-
+export default function AddTransactionDialog() {
 	const [open, setOpen] = useState(false);
 	const [transactionType, setTransactionType] = useState<
 		"Income" | "Expense" | null
 	>(null);
 
-	// Categories based on type
+	const formRef = useRef<HTMLFormElement>(null);
+
+	const [state, formAction] = useFormState<TransactionState, FormData>(
+		addTransaction,
+		null
+	);
+
+	console.log(state);
+	// useEffect to handle the form reset and state changes after a successful transaction
+	useEffect(() => {
+		if (state?.success) {
+			toast.success(state.message, {
+				position: "top-center",
+			});
+			formRef.current?.reset();
+			setTransactionType(null);
+			setTimeout(() => {
+				setOpen(false);
+			}, 500);
+		} else {
+			toast.error(state?.error, {
+				position: "top-center",
+			});
+		}
+	}, [state]);
+
 	const incomeCategories = ["Project Completion", "Service Sale"];
 	const expenseCategories = ["Salary", "Utilities"];
 
@@ -72,139 +74,96 @@ export default function AddTransactionDialog({
 				<DialogHeader>
 					<DialogTitle>Add New Transaction</DialogTitle>
 				</DialogHeader>
-				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-						<FormField
-							control={form.control}
-              name="date"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Date</FormLabel>
-									<FormControl>
-										<Input type="date" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+				<form action={formAction} ref={formRef} className="space-y-4">
+					{/* Date Field */}
+					<div className="space-y-2">
+						<Label htmlFor="date">Date</Label>
+						<Input id="date" name="date" type="date" />
+					</div>
 
-						<FormField
-							control={form.control}
+					{/* Type Field */}
+					<div className="space-y-2">
+						<Label htmlFor="type">Type</Label>
+						<Select
 							name="type"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Type</FormLabel>
-									<FormControl>
-										<Select
-											onValueChange={(value) => {
-												field.onChange(value);
-												setTransactionType(value as "Income" | "Expense");
-											}}
-											defaultValue={field.value}
-										>
-											<SelectTrigger className="w-full">
-												<SelectValue placeholder="Select a type" />
-											</SelectTrigger>
-											<SelectContent>
-												<SelectItem value="Income">Income</SelectItem>
-												<SelectItem value="Expense">Expense</SelectItem>
-											</SelectContent>
-										</Select>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+							onValueChange={(value) => {
+								setTransactionType(value as "Income" | "Expense");
+							}}
+						>
+							<SelectTrigger>
+								<SelectValue placeholder="Select a type" />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="Income">Income</SelectItem>
+								<SelectItem value="Expense">Expense</SelectItem>
+							</SelectContent>
+						</Select>
+					</div>
 
-						<FormField
-							control={form.control}
-							name="category"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Category</FormLabel>
-									<FormControl>
-										<Select
-											onValueChange={field.onChange}
-											defaultValue={field.value}
-											disabled={!transactionType} // Disable if no type is selected
-										>
-											<SelectTrigger className="w-full">
-												<SelectValue placeholder="Select a category" />
-											</SelectTrigger>
-											<SelectContent>
-												{transactionType === "Income" && (
-													<SelectGroup>
-														{incomeCategories.map((category) => (
-															<SelectItem key={category} value={category}>
-																{category}
-															</SelectItem>
-														))}
-													</SelectGroup>
-												)}
-												{transactionType === "Expense" && (
-													<SelectGroup>
-														{expenseCategories.map((category) => (
-															<SelectItem key={category} value={category}>
-																{category}
-															</SelectItem>
-														))}
-													</SelectGroup>
-												)}
-											</SelectContent>
-										</Select>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+					{/* Category Field */}
+					<div className="space-y-2">
+						<Label htmlFor="category">Category</Label>
+						<Select name="category" disabled={!transactionType}>
+							<SelectTrigger>
+								<SelectValue placeholder="Select a category" />
+							</SelectTrigger>
+							<SelectContent>
+								{transactionType === "Income" && (
+									<SelectGroup>
+										{incomeCategories.map((category) => (
+											<SelectItem key={category} value={category}>
+												{category}
+											</SelectItem>
+										))}
+									</SelectGroup>
+								)}
+								{transactionType === "Expense" && (
+									<SelectGroup>
+										{expenseCategories.map((category) => (
+											<SelectItem key={category} value={category}>
+												{category}
+											</SelectItem>
+										))}
+									</SelectGroup>
+								)}
+							</SelectContent>
+						</Select>
+					</div>
 
-						<FormField
-							control={form.control}
-							name="amount"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Amount</FormLabel>
-									<FormControl>
-										<Input
-											type="number"
-											{...field}
-											onChange={(e) => field.onChange(Number(e.target.value))}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+					{/* Amount Field */}
+					<div className="space-y-2">
+						<Label htmlFor="amount">Amount</Label>
+						<Input id="amount" name="amount" type="number" required />
+					</div>
 
-						<FormField
-							control={form.control}
-							name="department"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Department</FormLabel>
-									<FormControl>
-										<Select
-											onValueChange={field.onChange}
-											defaultValue={field.value}
-										>
-											<SelectTrigger className="w-full">
-												<SelectValue placeholder="Select a department" />
-											</SelectTrigger>
-											<SelectContent>
-												<SelectItem value="Development">Development</SelectItem>
-												<SelectItem value="Design">Design</SelectItem>
-												<SelectItem value="others">Others</SelectItem>
-											</SelectContent>
-										</Select>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+					{/* Department Field */}
+					<div className="space-y-2">
+						<Label htmlFor="department">Department</Label>
+						<Select name="department">
+							<SelectTrigger>
+								<SelectValue placeholder="Select a department" />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="Development">Development</SelectItem>
+								<SelectItem value="Design">Design</SelectItem>
+								<SelectItem value="Others">Others</SelectItem>
+							</SelectContent>
+						</Select>
+					</div>
 
-						<Button type="submit">Add Transaction</Button>
-					</form>
-				</Form>
+					{/* Submit Button */}
+					<SubmitButton buttonText="Add Transaction" />
+
+					{/* Display errors */}
+					{/* {state?.error && (
+						<p className="text-sm text-red-500">{state.error}</p>
+					)} */}
+
+					{/* Success message */}
+					{/* {state?.success && (
+						<p className="text-sm text-green-500">{state.message}</p>
+					)} */}
+				</form>
 			</DialogContent>
 		</Dialog>
 	);
