@@ -40,7 +40,8 @@ export async function signUp(
 
 		// Check for existing user (replace with actual database check)
 		if (existingUser) {
-			return {
+      return {
+				success: false,
 				error: "This email is already registered",
 			};
 		}
@@ -75,13 +76,15 @@ export async function signUp(
 				path: err.path.join("."),
 				message: err.message,
 			}));
-			return {
+      return {
+				success: false,
 				error: "Validation failed",
 				validationErrors: errors,
 			};
 		}
 
-		return {
+    return {
+			success: false,
 			error: "Something went wrong. Please try again.",
 		};
 	}

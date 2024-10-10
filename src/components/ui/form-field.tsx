@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { ChangeEvent } from "react";
 import { userValidationSchema } from "@/backend/modules/user/user.validation";
 import { z } from "zod";
-import { SignUpState } from "@/actions/signup.action";
+import { SignUpState } from "@/actions/register.action";
 
 type FormFieldProps = {
 	id: keyof z.infer<typeof userValidationSchema>;

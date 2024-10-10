@@ -1,10 +1,10 @@
-import SignupForm from "@/app/(auth)/register/signup-form2";
+import RegisterForm from "@/app/(auth)/register/register-form";
 
 
 export default function Page() {
 	return (
 		<div className="flex h-screen w-full items-center justify-center px-4">
-			<SignupForm />
+			<RegisterForm />
 		</div>
 	);
 }
