@@ -31,23 +31,9 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
+import { transactionValidationSchema } from "@/backend/modules/transaction/transaction.validation";
 
-// Define the schema with specific string enums for type, category, and department
-const transactionFormSchema = z.object({
-	date: z.string(),
-	type: z.enum(["Income", "Expense"], {
-		required_error: "Type is required",
-	}),
-	category: z.string({
-		required_error: "Category is required",
-	}),
-	amount: z.number().nonnegative(),
-	department: z.enum(["Development", "Design"], {
-		required_error: "Department is required",
-	}),
-});
-
-type TransactionForm = z.infer<typeof transactionFormSchema>;
+type TransactionForm = z.infer<typeof transactionValidationSchema>;
 
 type AddTransactionDialogProps = {
 	onAddTransaction: (transaction: Omit<Transaction, "id">) => void;
@@ -57,7 +43,7 @@ export default function AddTransactionDialog({
 	onAddTransaction,
 }: AddTransactionDialogProps) {
 	const form = useForm<TransactionForm>({
-		resolver: zodResolver(transactionFormSchema),
+		resolver: zodResolver(transactionValidationSchema),
 	});
 
 	const onSubmit = (values: TransactionForm) => {
@@ -90,7 +76,7 @@ export default function AddTransactionDialog({
 					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 						<FormField
 							control={form.control}
-							name="date"
+              name="date"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Date</FormLabel>
@@ -116,7 +102,7 @@ export default function AddTransactionDialog({
 											}}
 											defaultValue={field.value}
 										>
-											<SelectTrigger className="w-[280px]">
+											<SelectTrigger className="w-full">
 												<SelectValue placeholder="Select a type" />
 											</SelectTrigger>
 											<SelectContent>
@@ -142,7 +128,7 @@ export default function AddTransactionDialog({
 											defaultValue={field.value}
 											disabled={!transactionType} // Disable if no type is selected
 										>
-											<SelectTrigger className="w-[280px]">
+											<SelectTrigger className="w-full">
 												<SelectValue placeholder="Select a category" />
 											</SelectTrigger>
 											<SelectContent>
@@ -201,12 +187,13 @@ export default function AddTransactionDialog({
 											onValueChange={field.onChange}
 											defaultValue={field.value}
 										>
-											<SelectTrigger className="w-[280px]">
+											<SelectTrigger className="w-full">
 												<SelectValue placeholder="Select a department" />
 											</SelectTrigger>
 											<SelectContent>
 												<SelectItem value="Development">Development</SelectItem>
 												<SelectItem value="Design">Design</SelectItem>
+												<SelectItem value="others">Others</SelectItem>
 											</SelectContent>
 										</Select>
 									</FormControl>

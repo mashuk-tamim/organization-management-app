@@ -16,7 +16,7 @@ export type SignUpState = {
 	}[];
 } | null;
 
-export async function signUp(
+export async function register(
 	prevState: SignUpState,
 	formData: FormData
 ): Promise<SignUpState> {

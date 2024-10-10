@@ -3,12 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { useFormStatus } from "react-dom";
 
-export function SubmitButton() {
+export function SubmitButton({ buttonText }: { buttonText: string }) {
 	const { pending } = useFormStatus();
 
 	return (
 		<Button type="submit" className="w-full" disabled={pending}>
-			{pending ? "Creating account..." : "Create an account"}
+			{pending ? "Loading..." : buttonText}
 		</Button>
 	);
 }

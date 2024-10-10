@@ -16,7 +16,6 @@ import { z } from "zod";
 import { userValidationSchema } from "@/backend/modules/user/user.validation";
 import { useClientValidation } from "@/hooks/useClientValidation";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { signIn } from "@/auth";
 import { login } from "@/actions/login.action";
 import { IUser } from "@/backend/modules/user/user.interface";
 import { useRouter } from "next/navigation";
@@ -114,17 +113,16 @@ export default function LoginForm() {
 						id="password"
 						label="Password"
 						type="password"
-						placeholder="••••••••"
+						placeholder="your password"
 						state={state}
 						required
 						onValueChange={handleFieldChange("password")}
 						clientError={errors.password}
 					/>
 
-					<SubmitButton />
+					<SubmitButton buttonText="Login"/>
 
 					<Button
-						onClick={() => signIn("github")}
 						type="button"
 						variant="outline"
 						className="w-full"

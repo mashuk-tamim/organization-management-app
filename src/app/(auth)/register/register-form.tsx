@@ -20,7 +20,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import type { z } from "zod";
-import { signUp, SignUpState } from "@/actions/register.action";
+import { register, SignUpState } from "@/actions/register.action";
 import { useClientValidation } from "@/hooks/useClientValidation";
 import { userValidationSchema } from "@/backend/modules/user/user.validation";
 import { FormField } from "@/components/ui/form-field";
@@ -29,7 +29,10 @@ import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
 	const { push } = useRouter();
-	const [state, formAction] = useFormState<SignUpState, FormData>(signUp, null);
+	const [state, formAction] = useFormState<SignUpState, FormData>(
+		register,
+		null
+	);
 	const { errors, validateField } = useClientValidation();
 
 	if (state?.success) {
@@ -138,7 +141,7 @@ export default function RegisterForm() {
 						clientError={errors.profileImg}
 					/>
 
-					<SubmitButton />
+					<SubmitButton buttonText="Register"/>
 
 					<Button
 						onClick={() => signIn("github")}

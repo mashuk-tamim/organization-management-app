@@ -47,4 +47,4 @@ export const userValidationSchema = z.object({
 	profileImg: z.string().url().optional(),
 });
 
-export type UserFormData = z.infer<typeof userValidationSchema>;
+export type RegisterFormData = z.infer<typeof userValidationSchema>;
