@@ -1,17 +1,17 @@
 import { Input } from "@/components/ui/input";
+import { TransactionState } from "@/server/actions/transaction.action";
+import { transactionValidationSchema } from "@/validation/transaction.validation";
 import { ChangeEvent } from "react";
-import { userValidationSchema } from "@/backend/modules/user/user.validation";
 import { z } from "zod";
-import { SignUpState } from "@/actions/register.action";
 
 type FormFieldProps = {
-	id: keyof z.infer<typeof userValidationSchema>;
+	id: keyof z.infer<typeof transactionValidationSchema>;
 	label: string;
 	type?: string;
 	placeholder?: string;
-	state?: SignUpState | null;
+	state?: TransactionState | null;
 	required?: boolean;
-	onValueChange?: (value: string) => void;
+	onValueChange?: (value: string | number) => void;
 	clientError?: string;
 };
 
@@ -31,7 +31,9 @@ export function FormField({
 	const error = clientError || serverError;
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-		onValueChange?.(e.target.value);
+		const value =
+			type === "number" ? parseFloat(e.target.value) : e.target.value;
+		onValueChange?.(value);
 	};
 
 	return (
