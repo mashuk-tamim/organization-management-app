@@ -1,10 +1,11 @@
 "use server";
 
+import { userValidationSchema } from "@/validation/user.validation";
 import bcrypt from "bcryptjs";
-import User from "@/backend/modules/user/user.model";
-import { userValidationSchema } from "@/backend/modules/user/user.validation";
-import connectDB from "@/backend/utils/db";
 import { z } from "zod";
+import connectDB from "../config/db";
+import User from "../models/user.model";
+
 
 export type SignUpState = {
 	error?: string;

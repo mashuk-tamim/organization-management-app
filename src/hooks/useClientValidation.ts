@@ -1,5 +1,5 @@
 
-import { userValidationSchema } from "@/backend/modules/user/user.validation";
+import { userValidationSchema } from "@/validation/user.validation";
 import { useState } from "react";
 import { z } from "zod";
 

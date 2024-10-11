@@ -1,10 +1,10 @@
 "use server";
 
 import { z } from "zod";
-import { transactionValidationSchema } from "@/backend/modules/transaction/transaction.validation";
-import connectDB from "@/backend/utils/db";
-import Transaction from "@/backend/modules/transaction/transaction.model";
 import mongoose from "mongoose";
+import { transactionValidationSchema } from "@/validation/transaction.validation";
+import connectDB from "../config/db";
+import Transaction from "../models/transaction.model";
 
 // Infer the transaction data type from the validation schema
 export type TransactionData = z.infer<typeof transactionValidationSchema>;

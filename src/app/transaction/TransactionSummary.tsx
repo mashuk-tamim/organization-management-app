@@ -1,13 +1,10 @@
-import { ITransaction } from "@/backend/modules/transaction/transaction.interface";
 import { Label } from "@/components/ui/label";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import useTopExpenseCategory from "@/hooks/useTopExpenseCategory";
 import useTopIncomeCategory from "@/hooks/useTopIncomeCategory";
+import { TransactionSummaryProps } from "@/types/transactionSummary.type";
 
-type TransactionSummaryProps = {
-	transactions: ITransaction[];
-	loading: boolean;
-};
+
 
 export default function TransactionSummary({
 	transactions,
@@ -29,7 +26,7 @@ export default function TransactionSummary({
 			<div>
 				<h2 className="text-xl font-semibold mb-4">Income Summary</h2>
 				{loading ? (
-					<div className="w-full flex justify-center items-center">
+					<div className="">
 						<LoadingSpinner className=" my-2" />
 					</div>
 				) : (
@@ -50,7 +47,7 @@ export default function TransactionSummary({
 			<div>
 				<h2 className="text-xl font-semibold mb-4">Expense Summary</h2>
 				{loading ? (
-					<div className="w-full flex justify-center items-center">
+					<div className="">
 						<LoadingSpinner className=" my-2" />
 					</div>
 				) : (

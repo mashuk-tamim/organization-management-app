@@ -1,29 +1,13 @@
 "use client";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense } from "react";
 import TransactionHistory from "./TransactionHistory";
 import TransactionSummary from "./TransactionSummary";
-import { getAllTransactions } from "@/actions/transaction.action";
-import { ITransaction } from "@/backend/modules/transaction/transaction.interface";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { useTransactionContext } from "@/context/TransactionContext";
 
 export default function TransactionPage() {
-	const [transactions, setTransactions] = useState<ITransaction[]>([]);
-	const [loading, setLoading] = useState(true);
-	const [errorMessage, setErrorMessage] = useState("");
+	const { transactions, loading, errorMessage } = useTransactionContext();
 
-	useEffect(() => {
-		async function fetchAllTransactions() {
-			setLoading(true);
-			const response = await getAllTransactions();
-			if (response?.success && response.data) {
-				setTransactions(response.data);
-			} else {
-				setErrorMessage(response.error || "Failed to fetch transactions");
-			}
-			setLoading(false);
-		}
-		fetchAllTransactions();
-  }, []);
 
 	return (
 		<div className="container mx-auto p-6">

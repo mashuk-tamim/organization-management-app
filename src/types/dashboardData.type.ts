@@ -1,6 +1,6 @@
 export type TimeFrame = "weekly" | "monthly" | "yearly";
 
-export type FinancialData = {
+export type DashboardData = {
 	period: string;
 	income: number;
 	expense: number;

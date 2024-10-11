@@ -18,15 +18,16 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { PlusIcon } from "lucide-react";
-// import { TransactionState, addTransaction } from "@/actions/transaction.action";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { useFormState } from "react-dom";
-import { addTransaction, TransactionState } from "@/actions/transaction.action";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-
-// type TransactionForm = z.infer<typeof transactionValidationSchema>;
+import {
+	addTransaction,
+	TransactionState,
+} from "@/server/actions/transaction.action";
+import { useTransactionContext } from "@/context/TransactionContext";
 
 export default function AddTransactionDialog() {
 	const [open, setOpen] = useState(false);
@@ -34,26 +35,29 @@ export default function AddTransactionDialog() {
 		"Income" | "Expense" | null
 	>(null);
 
+	const { fetchTransactions } = useTransactionContext();
+
 	const formRef = useRef<HTMLFormElement>(null);
 
 	const [state, formAction] = useFormState<TransactionState, FormData>(
 		addTransaction,
 		null
-	);
-	// useEffect to handle the form reset and state changes after a successful transaction
+  );
+  
+	// This useEffect will run after a successful transaction is added
 	useEffect(() => {
 		if (state?.success) {
-			toast.success(state.message, {
-				position: "top-center",
-			});
+			fetchTransactions(); // Fetch updated transactions
+			toast.success(state.message);
+
+			// Reset form fields and state
 			formRef.current?.reset();
 			setTransactionType(null);
-			const timer = setTimeout(() => {
-				setOpen(false);
-      }, 500);
-      return () => clearTimeout(timer);
+
+			setOpen(false); // Close the modal
+			state.success = false;
 		}
-  }, [state]);
+	}, [state, fetchTransactions]);
 
 	const incomeCategories = ["Project Completion", "Service Sale"];
 	const expenseCategories = ["Salary", "Utilities"];
@@ -128,7 +132,7 @@ export default function AddTransactionDialog() {
 					{/* Amount Field */}
 					<div className="space-y-2">
 						<Label htmlFor="amount">Amount</Label>
-						<Input id="amount" name="amount" type="number" required />
+						<Input name="amount" type="number" required />
 					</div>
 
 					{/* Department Field */}
@@ -153,11 +157,6 @@ export default function AddTransactionDialog() {
 					{state?.error && (
 						<p className="text-sm text-red-500">{state.error}</p>
 					)}
-
-					{/* Success message */}
-					{/* {state?.success && (
-						<p className="text-sm text-green-500">{state.message}</p>
-					)} */}
 				</form>
 			</DialogContent>
 		</Dialog>
