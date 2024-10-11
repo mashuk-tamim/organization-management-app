@@ -13,7 +13,7 @@ import {
 import { FormField } from "@/components/ui/register-form-field";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { z } from "zod";
-import { useClientValidation } from "@/hooks/useRegisterFormFieldValidation";
+import { useRegisterFormFieldValidation } from "@/hooks/useRegisterFormFieldValidation";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import { IUser } from "@/types/user.interface";
@@ -34,7 +34,7 @@ export default function LoginForm() {
 		signInUser,
 		{ user: null }
 	);
-	const { errors, validateField } = useClientValidation();
+	const { errors, validateField } = useRegisterFormFieldValidation();
 	const { push } = useRouter();
 
 	const handleFieldChange =
