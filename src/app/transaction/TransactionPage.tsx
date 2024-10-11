@@ -1,21 +1,18 @@
-"use client"
+"use client";
+import { Suspense } from "react";
 import TransactionHistory from "./TransactionHistory";
 import TransactionSummary from "./TransactionSummary";
-import { useTransactions } from "./hooks/useTransactions";
 
 export default function TransactionPage() {
-	const { transactions, addTransaction } = useTransactions();
 
 	return (
 		<div className="container mx-auto p-6">
 			<h1 className="text-3xl font-bold mb-6">Transaction Management</h1>
+			<Suspense fallback={<p>Loading transactions...</p>}>
+				<TransactionHistory />
+			</Suspense>
 
-			<TransactionHistory
-				transactions={transactions}
-				onAddTransaction={addTransaction}
-			/>
-
-			<TransactionSummary transactions={transactions} />
+			<TransactionSummary />
 		</div>
 	);
 }

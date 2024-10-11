@@ -13,7 +13,7 @@ export type TransactionState = {
 	error?: string;
 	success?: boolean;
 	message?: string;
-	data?: TransactionData;
+	data: TransactionData | null;
 	validationErrors?: { path: string; message: string }[];
 } | null;
 
@@ -63,7 +63,8 @@ export async function addTransaction(
 			return {
 				success: false,
 				error: "Validation failed",
-				validationErrors: validationErrors,
+        validationErrors: validationErrors,
+        data: null,
 			};
 		}
 
@@ -75,7 +76,8 @@ export async function addTransaction(
 				validationErrors: Object.values(error.errors).map((err) => ({
 					path: err.path,
 					message: err.message,
-				})),
+        })),
+        data: null
 			};
 		}
 
@@ -83,14 +85,16 @@ export async function addTransaction(
 		if (error.code === 11000) {
 			return {
 				success: false,
-				error: "This transaction already exists",
+        error: "This transaction already exists",
+        data: null,
 			};
 		}
 
 		// Catch-all error handler
 		return {
 			success: false,
-			error: error.message || "An unexpected error occurred. Please try again.",
+      error: error.message || "An unexpected error occurred. Please try again.",
+      data: null,
 		};
 	}
 }

@@ -50,15 +50,12 @@ export default function AddTransactionDialog() {
 			});
 			formRef.current?.reset();
 			setTransactionType(null);
-			setTimeout(() => {
+			const timer = setTimeout(() => {
 				setOpen(false);
-			}, 500);
-		} else {
-			toast.error(state?.error, {
-				position: "top-center",
-			});
+      }, 500);
+      return () => clearTimeout(timer);
 		}
-	}, [state]);
+  }, [state]);
 
 	const incomeCategories = ["Project Completion", "Service Sale"];
 	const expenseCategories = ["Salary", "Utilities"];
@@ -155,9 +152,9 @@ export default function AddTransactionDialog() {
 					<SubmitButton buttonText="Add Transaction" />
 
 					{/* Display errors */}
-					{/* {state?.error && (
+					{state?.error && (
 						<p className="text-sm text-red-500">{state.error}</p>
-					)} */}
+					)}
 
 					{/* Success message */}
 					{/* {state?.success && (

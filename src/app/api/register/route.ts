@@ -1,12 +1,12 @@
 import User from "@/backend/modules/user/user.model";
-import connect from "@/backend/utils/db";
-import bcrypt from "bcrypt";
+import connectDB from "@/backend/utils/db";
+import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
 	const { firstName, lastName, email, password, gender, contactNumber  } = await req.json();
 
-	await connect();
+	await connectDB();
 
 	const existingUser = await User.findOne({ email });
 	if (existingUser) {

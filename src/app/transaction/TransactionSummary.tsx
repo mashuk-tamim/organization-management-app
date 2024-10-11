@@ -1,20 +1,16 @@
 import { Label } from "@/components/ui/label";
-import { Transaction } from "./types";
 
-type TransactionSummaryProps = {
-	transactions: Transaction[];
-};
 
-export default function TransactionSummary({
-	transactions,
-}: TransactionSummaryProps) {
-	const totalIncome = transactions
-		.filter((transaction) => transaction.type === "Income")
-		.reduce((sum, transaction) => sum + transaction.amount, 0);
+export default function TransactionSummary() {
+  const totalIncome = 30000;
+  const totalExpenses = 20000;
+	// const totalIncome = transactions
+	// 	.filter((transaction) => transaction.type === "Income")
+	// 	.reduce((sum, transaction) => sum + transaction.amount, 0);
 
-	const totalExpenses = transactions
-		.filter((transaction) => transaction.type === "Expense")
-		.reduce((sum, transaction) => sum + transaction.amount, 0);
+	// const totalExpenses = transactions
+	// 	.filter((transaction) => transaction.type === "Expense")
+	// 	.reduce((sum, transaction) => sum + transaction.amount, 0);
 
 	return (
 		<div className="grid gap-6 md:grid-cols-2">

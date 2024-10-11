@@ -6,24 +6,43 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { Transaction } from "./types";
 import AddTransactionDialog from "./AddTransactionDialog";
+import { useEffect, useState } from "react";
+import { getAllTransactions } from "@/actions/register.action";
+import { ITransaction } from "@/backend/modules/transaction/transaction.interface";
+import { toast } from "sonner";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
-type TransactionHistoryProps = {
-	transactions: Transaction[];
-	onAddTransaction: (transaction: Omit<Transaction, "id">) => void;
-};
+export default function TransactionHistory() {
+	const [transactions, setTransactions] = useState<ITransaction[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [errorMessage, setErrorMessage] = useState("");
 
-export default function TransactionHistory({
-	transactions,
-	// onAddTransaction,
-}: TransactionHistoryProps) {
+	useEffect(() => {
+		async function fetchAllTransactions() {
+			setLoading(true);
+			const response = await getAllTransactions();
+			console.log(response);
+			if (response?.success && response.data) {
+				setTransactions(response.data);
+			} else {
+				setErrorMessage(response.error || "Failed to fetch transactions");
+			}
+			setLoading(false);
+		}
+		fetchAllTransactions();
+	}, []);
+
+	if (errorMessage !== "") {
+		toast.error(errorMessage);
+	}
+
+	console.log(transactions);
 	return (
 		<div className="mb-6">
 			<div className="flex justify-between items-center mb-4">
 				<h2 className="text-xl font-semibold">Transaction History</h2>
-        {/* <AddTransactionDialog onAddTransaction={onAddTransaction} /> */}
-        <AddTransactionDialog/>
+				<AddTransactionDialog />
 			</div>
 			<Table>
 				<TableHeader>
@@ -37,7 +56,7 @@ export default function TransactionHistory({
 				</TableHeader>
 				<TableBody>
 					{transactions.map((transaction) => (
-						<TableRow key={transaction.id}>
+						<TableRow key={transaction._id}>
 							<TableCell>{transaction.date}</TableCell>
 							<TableCell>{transaction.type}</TableCell>
 							<TableCell>{transaction.category}</TableCell>
@@ -47,6 +66,11 @@ export default function TransactionHistory({
 					))}
 				</TableBody>
 			</Table>
+			{loading && (
+				<div className="w-full flex justify-center items-center">
+					<LoadingSpinner className=" my-2" />
+				</div>
+			)}
 		</div>
 	);
 }
