@@ -3,37 +3,44 @@
 import Link from "next/link";
 import React from "react";
 import { Button } from "./ui/button";
-// import { signOut, useSession } from "next-auth/react";
+import { ThemeToggle } from "./ui/theme-toggle";
 
 export default function Navbar() {
-  // const { data } = useSession();
-	// console.log(data);
+
 	return (
 		<nav className="w-screen flex justify-between gap-4 font-medium py-4 px-10">
 			<div>
 				<Link href="/">
-					<h1 className="text-yellow-600 text-xl font-bold cursor-pointer">
-						UqiDev
+					<h1 className="text-[#4ed162] text-xl font-bold cursor-pointer">
+						Expensee
 					</h1>
 				</Link>
 			</div>
 			<div className="flex gap-4 font-medium">
-				<Link href="/">Home</Link>
-				<Link href="/dashboard">Dashboard</Link>
-				<Link href="/transaction">Transaction</Link>
+				<Link href="/" className="hover:text-[#4ed162]">
+					Home
+				</Link>
+				<Link href="/dashboard" className="hover:text-[#4ed162]">
+					Dashboard
+				</Link>
+				<Link href="/transaction" className="hover:text-[#4ed162]">
+					Transaction
+				</Link>
 			</div>
 			<div className="flex gap-4">
-				
-					<>
-						<Button>
-							<Link href="/login">Login</Link>
-						</Button>
-						<Button>
-							<Link href="/register">Register</Link>
-						</Button>
-					</>
-		
-					{/* <div className="flex gap-2">
+				<div>
+					<ThemeToggle />
+				</div>
+				<div className="flex gap-4">
+					<Button>
+						<Link href="/login">Login</Link>
+					</Button>
+					<Button>
+						<Link href="/register">Register</Link>
+					</Button>
+				</div>
+
+				{/* <div className="flex gap-2">
 						<div className="flex flex-col">
 							<p>{data.user?.name || "user name not available"}</p>
 							<p>{data.user?.email}</p>

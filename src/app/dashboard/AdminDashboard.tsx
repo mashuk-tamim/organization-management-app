@@ -9,7 +9,7 @@ import FinancialStatement from "./FinancialStatement";
 import { DashboardData, TimeFrame } from "../../types/dashboardData.type";
 import useFinancialData from "@/hooks/useFinancialData";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { useTransactionContext } from "@/context/TransactionContext";
+import { useTransactionContext } from "@/provider/TransactionContext";
 
 export default function AdminDashboard() {
 	const [timeFrame, setTimeFrame] = useState<TimeFrame>("monthly");

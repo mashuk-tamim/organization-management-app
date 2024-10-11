@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import TransactionHistory from "./TransactionHistory";
 import TransactionSummary from "./TransactionSummary";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { useTransactionContext } from "@/context/TransactionContext";
+import { useTransactionContext } from "@/provider/TransactionContext";
 
 export default function TransactionPage() {
 	const { transactions, loading, errorMessage } = useTransactionContext();
