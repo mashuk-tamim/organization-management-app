@@ -7,7 +7,7 @@ type FieldErrors = Partial<
 	Record<keyof z.infer<typeof userValidationSchema>, string>
 >;
 
-export function useClientValidation() {
+export function useRegisterFormFieldValidation() {
 	const [errors, setErrors] = useState<FieldErrors>({});
 
 	const validateField = (

@@ -10,10 +10,10 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { FormField } from "@/components/ui/form-field";
+import { FormField } from "@/components/ui/register-form-field";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { z } from "zod";
-import { useClientValidation } from "@/hooks/useClientValidation";
+import { useClientValidation } from "@/hooks/useRegisterFormFieldValidation";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import { IUser } from "@/types/user.interface";

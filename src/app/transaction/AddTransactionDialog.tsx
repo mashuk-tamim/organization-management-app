@@ -12,7 +12,6 @@ import {
 import {
 	Select,
 	SelectContent,
-	SelectGroup,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
@@ -20,14 +19,14 @@ import {
 import { PlusIcon } from "lucide-react";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { useFormState } from "react-dom";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import {
 	addTransaction,
 	TransactionState,
 } from "@/server/actions/transaction.action";
-import { useTransactionContext } from "@/context/TransactionContext";
+import { useTransactionContext } from "@/provider/TransactionContext";
+import { useTransactionFormFieldValidation } from "@/hooks/useTransactionFormFieldValidation";
+import { FormField } from "@/components/ui/transaction-form-field";
 
 export default function AddTransactionDialog() {
 	const [open, setOpen] = useState(false);
@@ -43,6 +42,12 @@ export default function AddTransactionDialog() {
 		addTransaction,
 		null
   );
+
+  const { errors, validateField } = useTransactionFormFieldValidation();
+
+  const handleFieldChange = (fieldName: string) => (value: string | number) => {
+		validateField(fieldName as keyof TransactionState, value);
+	};
   
 	// This useEffect will run after a successful transaction is added
 	useEffect(() => {
@@ -73,23 +78,30 @@ export default function AddTransactionDialog() {
 				<DialogHeader>
 					<DialogTitle>Add New Transaction</DialogTitle>
 				</DialogHeader>
-				<form action={formAction} ref={formRef} className="space-y-4">
-					{/* Date Field */}
-					<div className="space-y-2">
-						<Label htmlFor="date">Date</Label>
-						<Input id="date" name="date" type="date" />
-					</div>
+				<form action={formAction} className="space-y-4">
+					<FormField
+						id="date"
+						label="Date"
+						type="date"
+						state={state}
+						required
+						onValueChange={handleFieldChange("date")}
+						clientError={errors.date}
+					/>
 
-					{/* Type Field */}
-					<div className="space-y-2">
-						<Label htmlFor="type">Type</Label>
+					<div>
+						<label htmlFor="type" className="block text-sm font-medium">
+							Type<span className="text-red-500 ml-1">*</span>
+						</label>
 						<Select
 							name="type"
+							required
 							onValueChange={(value) => {
 								setTransactionType(value as "Income" | "Expense");
+								handleFieldChange("type")(value);
 							}}
 						>
-							<SelectTrigger>
+							<SelectTrigger className={errors.type ? "border-red-500" : ""}>
 								<SelectValue placeholder="Select a type" />
 							</SelectTrigger>
 							<SelectContent>
@@ -97,49 +109,68 @@ export default function AddTransactionDialog() {
 								<SelectItem value="Expense">Expense</SelectItem>
 							</SelectContent>
 						</Select>
+						{errors.type && (
+							<p className="text-sm text-red-500">{errors.type}</p>
+						)}
 					</div>
 
-					{/* Category Field */}
-					<div className="space-y-2">
-						<Label htmlFor="category">Category</Label>
-						<Select name="category" disabled={!transactionType}>
-							<SelectTrigger>
+					<div>
+						<label htmlFor="category" className="block text-sm font-medium">
+							Category<span className="text-red-500 ml-1">*</span>
+						</label>
+						<Select
+							name="category"
+							required
+							disabled={!transactionType}
+							onValueChange={handleFieldChange("category")}
+						>
+							<SelectTrigger
+								className={errors.category ? "border-red-500" : ""}
+							>
 								<SelectValue placeholder="Select a category" />
 							</SelectTrigger>
 							<SelectContent>
-								{transactionType === "Income" && (
-									<SelectGroup>
-										{incomeCategories.map((category) => (
-											<SelectItem key={category} value={category}>
-												{category}
-											</SelectItem>
-										))}
-									</SelectGroup>
-								)}
-								{transactionType === "Expense" && (
-									<SelectGroup>
-										{expenseCategories.map((category) => (
-											<SelectItem key={category} value={category}>
-												{category}
-											</SelectItem>
-										))}
-									</SelectGroup>
-								)}
+								{transactionType === "Income" &&
+									incomeCategories.map((category) => (
+										<SelectItem key={category} value={category}>
+											{category}
+										</SelectItem>
+									))}
+								{transactionType === "Expense" &&
+									expenseCategories.map((category) => (
+										<SelectItem key={category} value={category}>
+											{category}
+										</SelectItem>
+									))}
 							</SelectContent>
 						</Select>
+						{errors.category && (
+							<p className="text-sm text-red-500">{errors.category}</p>
+						)}
 					</div>
 
-					{/* Amount Field */}
-					<div className="space-y-2">
-						<Label htmlFor="amount">Amount</Label>
-						<Input name="amount" type="number" required />
-					</div>
+					<FormField
+						id="amount"
+						label="Amount"
+						type="number"
+						state={state}
+						required
+						onValueChange={handleFieldChange("amount")}
+						clientError={errors.amount}
+					/>
 
-					{/* Department Field */}
-					<div className="space-y-2">
-						<Label htmlFor="department">Department</Label>
-						<Select name="department">
-							<SelectTrigger>
+					<div>
+						<label htmlFor="department" className="block text-sm font-medium">
+							Department<span className="text-red-500 ml-1">*</span>
+						</label>
+						<Select
+							name="department"
+							required
+							onValueChange={handleFieldChange("department")}
+						>
+							<SelectTrigger
+								className={errors.department ? "border-red-500" : ""}
+							>
 								<SelectValue placeholder="Select a department" />
 							</SelectTrigger>
 							<SelectContent>
@@ -148,17 +179,108 @@ export default function AddTransactionDialog() {
 								<SelectItem value="Others">Others</SelectItem>
 							</SelectContent>
 						</Select>
+						{errors.department && (
+							<p className="text-sm text-red-500">{errors.department}</p>
+						)}
 					</div>
 
-					{/* Submit Button */}
 					<SubmitButton buttonText="Add Transaction" />
 
-					{/* Display errors */}
-					{state?.error && (
+					{state?.error && !state.validationErrors && (
 						<p className="text-sm text-red-500">{state.error}</p>
+					)}
+
+					{state?.success && (
+						<p className="text-sm text-green-500">{state.message}</p>
 					)}
 				</form>
 			</DialogContent>
 		</Dialog>
 	);
 }
+
+				// <form action={formAction} ref={formRef} className="space-y-4">
+				// 	{/* Date Field */}
+				// 	<div className="space-y-2">
+				// 		<Label htmlFor="date">Date</Label>
+				// 		<Input id="date" name="date" type="date" />
+				// 	</div>
+
+				// 	{/* Type Field */}
+				// 	<div className="space-y-2">
+				// 		<Label htmlFor="type">Type</Label>
+				// 		<Select
+				// 			name="type"
+				// 			onValueChange={(value) => {
+				// 				setTransactionType(value as "Income" | "Expense");
+				// 			}}
+				// 		>
+				// 			<SelectTrigger>
+				// 				<SelectValue placeholder="Select a type" />
+				// 			</SelectTrigger>
+				// 			<SelectContent>
+				// 				<SelectItem value="Income">Income</SelectItem>
+				// 				<SelectItem value="Expense">Expense</SelectItem>
+				// 			</SelectContent>
+				// 		</Select>
+				// 	</div>
+
+				// 	{/* Category Field */}
+				// 	<div className="space-y-2">
+				// 		<Label htmlFor="category">Category</Label>
+				// 		<Select name="category" disabled={!transactionType}>
+				// 			<SelectTrigger>
+				// 				<SelectValue placeholder="Select a category" />
+				// 			</SelectTrigger>
+				// 			<SelectContent>
+				// 				{transactionType === "Income" && (
+				// 					<SelectGroup>
+				// 						{incomeCategories.map((category) => (
+				// 							<SelectItem key={category} value={category}>
+				// 								{category}
+				// 							</SelectItem>
+				// 						))}
+				// 					</SelectGroup>
+				// 				)}
+				// 				{transactionType === "Expense" && (
+				// 					<SelectGroup>
+				// 						{expenseCategories.map((category) => (
+				// 							<SelectItem key={category} value={category}>
+				// 								{category}
+				// 							</SelectItem>
+				// 						))}
+				// 					</SelectGroup>
+				// 				)}
+				// 			</SelectContent>
+				// 		</Select>
+				// 	</div>
+
+				// 	{/* Amount Field */}
+				// 	<div className="space-y-2">
+				// 		<Label htmlFor="amount">Amount</Label>
+				// 		<Input name="amount" type="number" required />
+				// 	</div>
+
+				// 	{/* Department Field */}
+				// 	<div className="space-y-2">
+				// 		<Label htmlFor="department">Department</Label>
+				// 		<Select name="department">
+				// 			<SelectTrigger>
+				// 				<SelectValue placeholder="Select a department" />
+				// 			</SelectTrigger>
+				// 			<SelectContent>
+				// 				<SelectItem value="Development">Development</SelectItem>
+				// 				<SelectItem value="Design">Design</SelectItem>
+				// 				<SelectItem value="Others">Others</SelectItem>
+				// 			</SelectContent>
+				// 		</Select>
+				// 	</div>
+
+				// 	{/* Submit Button */}
+				// 	<SubmitButton buttonText="Add Transaction" />
+
+				// 	{/* Display errors */}
+				// 	{state?.error && (
+				// 		<p className="text-sm text-red-500">{state.error}</p>
+				// 	)}
+				// </form>

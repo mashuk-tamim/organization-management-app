@@ -8,10 +8,10 @@ import {
 	Legend,
 	ResponsiveContainer,
 } from "recharts";
-import { FinancialData } from "../../types/dashboardData.type";
+import { DashboardData } from "../../types/dashboardData.type";
 
 type ProfitLossChartProps = {
-	data: FinancialData[];
+	data: DashboardData[];
 };
 
 export default function ProfitLossChart({ data }: ProfitLossChartProps) {

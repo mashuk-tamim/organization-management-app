@@ -7,7 +7,7 @@ import connectDB from "../config/db";
 import User from "../models/user.model";
 
 
-export type SignUpState = {
+export type RegisterState = {
 	error?: string;
 	success?: boolean;
 	message?: string;
@@ -18,9 +18,9 @@ export type SignUpState = {
 } | null;
 
 export async function register(
-	prevState: SignUpState,
+	prevState: RegisterState,
 	formData: FormData
-): Promise<SignUpState> {
+): Promise<RegisterState> {
 	const rawFormData = {
 		firstName: formData.get("firstName"),
 		lastName: formData.get("lastName"),

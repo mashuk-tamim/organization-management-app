@@ -8,10 +8,10 @@ import {
 	Legend,
 	ResponsiveContainer,
 } from "recharts";
-import { FinancialData } from "../../types/dashboardData.type";
+import { DashboardData } from "../../types/dashboardData.type";
 
 type IncomeExpenseChartProps = {
-	data: FinancialData[];
+	data: DashboardData[];
 };
 
 export default function IncomeExpenseChart({ data }: IncomeExpenseChartProps) {

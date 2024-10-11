@@ -20,20 +20,20 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import type { z } from "zod";
-import { useClientValidation } from "@/hooks/useClientValidation";
-import { FormField } from "@/components/ui/form-field";
+import { useRegisterFormFieldValidation } from "@/hooks/useRegisterFormFieldValidation";
+import { FormField } from "@/components/ui/register-form-field";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { useRouter } from "next/navigation";
-import { register, SignUpState } from "@/server/actions/register.action";
+import { register, RegisterState } from "@/server/actions/register.action";
 import { userValidationSchema } from "@/validation/user.validation";
 
 export default function RegisterForm() {
 	const { push } = useRouter();
-	const [state, registerFormAction] = useFormState<SignUpState, FormData>(
+	const [state, registerFormAction] = useFormState<RegisterState, FormData>(
 		register,
 		null
 	);
-	const { errors, validateField } = useClientValidation();
+	const { errors, validateField } = useRegisterFormFieldValidation();
 
 	if (state?.success) {
 		push("/login");
