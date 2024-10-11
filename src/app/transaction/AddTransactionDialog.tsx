@@ -40,8 +40,6 @@ export default function AddTransactionDialog() {
 		addTransaction,
 		null
 	);
-
-	console.log(state);
 	// useEffect to handle the form reset and state changes after a successful transaction
 	useEffect(() => {
 		if (state?.success) {

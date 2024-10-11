@@ -7,37 +7,26 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import AddTransactionDialog from "./AddTransactionDialog";
-import { useEffect, useState } from "react";
-import { getAllTransactions } from "@/actions/register.action";
+// import { useEffect, useState } from "react";
+// import { getAllTransactions } from "@/actions/register.action";
 import { ITransaction } from "@/backend/modules/transaction/transaction.interface";
-import { toast } from "sonner";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
-export default function TransactionHistory() {
-	const [transactions, setTransactions] = useState<ITransaction[]>([]);
-	const [loading, setLoading] = useState(true);
-	const [errorMessage, setErrorMessage] = useState("");
+type TransactionHistoryProps = {
+	transactions: ITransaction[];
+	loading: boolean;
+	errorMessage: string;
+};
 
-	useEffect(() => {
-		async function fetchAllTransactions() {
-			setLoading(true);
-			const response = await getAllTransactions();
-			console.log(response);
-			if (response?.success && response.data) {
-				setTransactions(response.data);
-			} else {
-				setErrorMessage(response.error || "Failed to fetch transactions");
-			}
-			setLoading(false);
-		}
-		fetchAllTransactions();
-	}, []);
-
-	if (errorMessage !== "") {
-		toast.error(errorMessage);
+export default function TransactionHistory({
+	transactions,
+	loading,
+	errorMessage,
+}: TransactionHistoryProps) {
+	if (!errorMessage) {
+		<p className="text-sm text-red-500">{errorMessage}</p>;
 	}
 
-	console.log(transactions);
 	return (
 		<div className="mb-6">
 			<div className="flex justify-between items-center mb-4">

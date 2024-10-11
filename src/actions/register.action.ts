@@ -5,7 +5,6 @@ import User from "@/backend/modules/user/user.model";
 import { userValidationSchema } from "@/backend/modules/user/user.validation";
 import connectDB from "@/backend/utils/db";
 import { z } from "zod";
-import Transaction from "@/backend/modules/transaction/transaction.model";
 
 export type SignUpState = {
 	error?: string;
@@ -89,23 +88,4 @@ export async function register(
 			error: "Something went wrong. Please try again.",
 		};
 	}
-}
-
-
-// Fetch all transactions
-export async function getAllTransactions() {
-  try {
-    await connectDB(); // Connect to the database
-    const transactions = await Transaction.find(); // Fetch all transactions
-    return {
-      success: true,
-      data: transactions,
-    };
-  } catch (error) {
-    console.log("Error fetching transactions:", error);
-    return {
-      success: false,
-      error: "Failed to fetch transactions",
-    };
-  }
 }
