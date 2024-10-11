@@ -8,7 +8,7 @@ import {
 	Legend,
 	ResponsiveContainer,
 } from "recharts";
-import { FinancialData } from "./types";
+import { FinancialData } from "../../types/dashboardData.type";
 
 type IncomeExpenseChartProps = {
 	data: FinancialData[];

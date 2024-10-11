@@ -13,12 +13,12 @@ import {
 import { FormField } from "@/components/ui/form-field";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { z } from "zod";
-import { userValidationSchema } from "@/backend/modules/user/user.validation";
 import { useClientValidation } from "@/hooks/useClientValidation";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { login } from "@/actions/login.action";
-import { IUser } from "@/backend/modules/user/user.interface";
 import { useRouter } from "next/navigation";
+import { IUser } from "@/types/user.interface";
+import { userValidationSchema } from "@/validation/user.validation";
+import { login } from "@/server/actions/login.action";
 
 type LoginInResponseType = {
 	user: IUser | null;
@@ -52,17 +52,8 @@ export default function LoginForm() {
 
 			if (response?.success) {
 				push("/dashboard");
-				// 	// You can store user data in session, local storage, or state
-				// 	// For example, storing in local storage or triggering global state
-				// 	// localStorage.setItem("user", JSON.stringify(response.user));
-
-				// 	return {
-				// 		...response,
-				// 		user: response.user, // store user data in state
-				// 	};
 			}
 
-			// Ensure the response is properly structured
 			return {
 				user: response?.user || null,
 				success: response?.success || false,
@@ -120,13 +111,9 @@ export default function LoginForm() {
 						clientError={errors.password}
 					/>
 
-					<SubmitButton buttonText="Login"/>
+					<SubmitButton buttonText="Login" />
 
-					<Button
-						type="button"
-						variant="outline"
-						className="w-full"
-					>
+					<Button type="button" variant="outline" className="w-full">
 						Sign in with Github <GitHubLogoIcon className="ml-2" />
 					</Button>
 

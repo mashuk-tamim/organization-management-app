@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { TimeFrame } from "./types";
+import { TimeFrame } from "../../types/dashboardData.type";
 
 type TimeFrameSelectorProps = {
 	timeFrame: TimeFrame;

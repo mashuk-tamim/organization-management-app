@@ -1,7 +1,7 @@
-import { FinancialData } from "./types";
+import { DashboardData } from "../../types/dashboardData.type";
 
 type FinancialStatementProps = {
-	data: FinancialData[];
+	data: DashboardData[];
 };
 
 export default function FinancialStatement({ data }: FinancialStatementProps) {

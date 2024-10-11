@@ -1,11 +1,12 @@
 "use server";
 
+import { loginValidationSchema } from "@/validation/login.validation";
 import bcrypt from "bcryptjs";
-import User from "@/backend/modules/user/user.model";
-import connectDB from "@/backend/utils/db";
+
 import z from "zod";
-import { loginValidationSchema } from "@/backend/modules/user/login.validation";
-import { IUser } from "@/backend/modules/user/user.interface";
+import connectDB from "../config/db";
+import User from "../models/user.model";
+import { IUser } from "@/types/user.interface";
 
 export type LoginState = {
   user: IUser | null;

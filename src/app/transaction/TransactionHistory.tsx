@@ -7,16 +7,8 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import AddTransactionDialog from "./AddTransactionDialog";
-// import { useEffect, useState } from "react";
-// import { getAllTransactions } from "@/actions/register.action";
-import { ITransaction } from "@/backend/modules/transaction/transaction.interface";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-
-type TransactionHistoryProps = {
-	transactions: ITransaction[];
-	loading: boolean;
-	errorMessage: string;
-};
+import { TransactionHistoryProps } from "@/types/transactionHistory.type";
 
 export default function TransactionHistory({
 	transactions,

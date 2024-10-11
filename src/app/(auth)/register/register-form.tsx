@@ -20,12 +20,12 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import type { z } from "zod";
-import { register, SignUpState } from "@/actions/register.action";
 import { useClientValidation } from "@/hooks/useClientValidation";
-import { userValidationSchema } from "@/backend/modules/user/user.validation";
 import { FormField } from "@/components/ui/form-field";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { useRouter } from "next/navigation";
+import { register, SignUpState } from "@/server/actions/register.action";
+import { userValidationSchema } from "@/validation/user.validation";
 
 export default function RegisterForm() {
 	const { push } = useRouter();
