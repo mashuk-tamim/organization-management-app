@@ -1,4 +1,5 @@
-import { ITransaction } from "@/backend/modules/transaction/transaction.interface";
+
+import { ITransaction } from "@/types/transaction.interface";
 import { useMemo } from "react";
 
 const useTopIncomeCategory = (transactions: ITransaction[]) => {
