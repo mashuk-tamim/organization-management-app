@@ -63,8 +63,8 @@ export async function addTransaction(
 			return {
 				success: false,
 				error: "Validation failed",
-        validationErrors: validationErrors,
-        data: null,
+				validationErrors: validationErrors,
+				data: null,
 			};
 		}
 
@@ -76,8 +76,8 @@ export async function addTransaction(
 				validationErrors: Object.values(error.errors).map((err) => ({
 					path: err.path,
 					message: err.message,
-        })),
-        data: null
+				})),
+				data: null,
 			};
 		}
 
@@ -85,34 +85,48 @@ export async function addTransaction(
 		if (error.code === 11000) {
 			return {
 				success: false,
-        error: "This transaction already exists",
-        data: null,
+				error: "This transaction already exists",
+				data: null,
 			};
 		}
 
 		// Catch-all error handler
 		return {
 			success: false,
-      error: error.message || "An unexpected error occurred. Please try again.",
-      data: null,
+			error: error.message || "An unexpected error occurred. Please try again.",
+			data: null,
 		};
 	}
 }
 
 // Fetch all transactions
 export async function getAllTransactions() {
-  try {
-    await connectDB(); // Connect to the database
-    const transactions = await Transaction.find(); // Fetch all transactions
-    return {
-      success: true,
-      data: transactions,
-    };
-  } catch (error) {
-    console.log("Error fetching transactions:", error);
-    return {
-      success: false,
-      error: "Failed to fetch transactions",
-    };
-  }
+	try {
+		await connectDB(); // Connect to the database
+		const transactions = await Transaction.find();
+
+		// Convert MongoDB documents into plain JavaScript objects
+		const plainTransactions = transactions.map((transaction) => {
+			const plainTransaction = transaction.toObject(); // Convert Mongoose doc to plain object
+
+			// Transform _id, createdAt, updatedAt into strings
+			return {
+				...plainTransaction,
+				_id: plainTransaction._id.toString(), 
+				createdAt: plainTransaction.createdAt.toISOString(),
+				updatedAt: plainTransaction.updatedAt.toISOString(),
+			};
+		});
+
+		return {
+			success: true,
+			data: plainTransactions,
+		};
+	} catch (error) {
+		console.log("Error fetching transactions:", error);
+		return {
+			success: false,
+			error: "Failed to fetch transactions",
+		};
+	}
 }

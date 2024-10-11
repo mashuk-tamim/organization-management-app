@@ -4,5 +4,7 @@ export interface ITransaction {
 	type: "Income" | "Expense";
 	category: "Project Completion" | "Service Sale" | "Salary" | "Utilities";
 	amount: number;
-	department: "Development" | "Design" | "Others";
+  department: "Development" | "Design" | "Others";
+  createdAt?: string,
+  updatedAt?: string
 }

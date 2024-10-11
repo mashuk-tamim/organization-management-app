@@ -1,16 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import TimeFrameSelector from "./TimeFrameSelector";
 import ProfitLossChart from "./ProfitLossChart";
 import IncomeExpenseChart from "./IncomeExpenseChart";
 import FinancialStatement from "./FinancialStatement";
-import { monthlyData, weeklyData, yearlyData } from "./mockData";
 import { FinancialData, TimeFrame } from "./types";
+import { ITransaction } from "@/backend/modules/transaction/transaction.interface";
+import { getAllTransactions } from "@/actions/transaction.action";
+import useFinancialData from "@/hooks/useFinancialData";
 
 export default function AdminDashboard() {
-	const [timeFrame, setTimeFrame] = useState<TimeFrame>("monthly");
+  const [timeFrame, setTimeFrame] = useState<TimeFrame>("monthly");
+  const [transactions, setTransactions] = useState<ITransaction[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [errorMessage, setErrorMessage] = useState("");
+
+	useEffect(() => {
+		async function fetchAllTransactions() {
+			setLoading(true);
+			const response = await getAllTransactions();
+			if (response?.success && response.data) {
+				setTransactions(response.data);
+			} else {
+				setErrorMessage(response.error || "Failed to fetch transactions");
+			}
+			setLoading(false);
+		}
+		fetchAllTransactions();
+  }, []);
+  
+  const { weeklyData, monthlyData, yearlyData } =
+    useFinancialData(transactions);
 
 	const getData = (): FinancialData[] => {
 		switch (timeFrame) {
@@ -25,7 +47,9 @@ export default function AdminDashboard() {
 		}
 	};
 
-	const data = getData();
+  const data = getData();
+  
+  console.log(data);
 
 	return (
 		<div className="container mx-auto p-4">

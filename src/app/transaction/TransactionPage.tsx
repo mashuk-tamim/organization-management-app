@@ -23,7 +23,7 @@ export default function TransactionPage() {
 			setLoading(false);
 		}
 		fetchAllTransactions();
-	}, []);
+  }, []);
 
 	return (
 		<div className="container mx-auto p-6">
