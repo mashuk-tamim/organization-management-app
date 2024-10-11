@@ -1,6 +1,6 @@
 "use server";
 
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import User from "@/backend/modules/user/user.model";
 import connectDB from "@/backend/utils/db";
 import z from "zod";

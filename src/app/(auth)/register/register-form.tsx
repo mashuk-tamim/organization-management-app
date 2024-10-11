@@ -29,7 +29,7 @@ import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
 	const { push } = useRouter();
-	const [state, formAction] = useFormState<SignUpState, FormData>(
+	const [state, registerFormAction] = useFormState<SignUpState, FormData>(
 		register,
 		null
 	);
@@ -52,7 +52,7 @@ export default function RegisterForm() {
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<form action={formAction} className="space-y-4">
+				<form action={registerFormAction} className="space-y-4">
 					<div className="flex gap-4">
 						<div className="flex-1">
 							<FormField
@@ -93,7 +93,7 @@ export default function RegisterForm() {
 						id="password"
 						label="Password"
 						type="password"
-						placeholder="••••••••"
+						placeholder="your password"
 						state={state}
 						required
 						onValueChange={handleFieldChange("password")}
