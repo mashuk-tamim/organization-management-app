@@ -4,13 +4,16 @@ import Link from "next/link";
 import React from "react";
 import { Button } from "./ui/button";
 import { ThemeToggle } from "./ui/theme-toggle";
+import Image from "next/image";
+import logo from "@/public/logo.png"
 
 export default function Navbar() {
 
 	return (
 		<nav className="w-screen flex justify-between gap-4 font-medium py-4 px-10">
 			<div>
-				<Link href="/">
+        <Link href="/" className="flex gap-1 items-center">
+          <Image src={logo} alt="logo" className="size-6"/>
 					<h1 className="text-[#4ed162] text-xl font-bold cursor-pointer">
 						Expensee
 					</h1>
