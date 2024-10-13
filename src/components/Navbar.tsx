@@ -47,15 +47,17 @@ export default function Navbar() {
 					<ThemeToggle />
 				</div>
 				{loading ? (
-					<div className="animate-pulse bg-gray-200 rounded-full size-9"></div>
+					<div className="animate-pulse bg-text-green-primary/30 rounded-full size-9"></div>
 				) : user ? (
 					<>
-						<Link href="/dashboard" className="hover:text-green-primary">
-							Dashboard
-						</Link>
-						<Link href="/transaction" className="hover:text-green-primary">
-							Transaction
-						</Link>
+						<div className="hidden md:flex gap-4">
+							<Link href="/dashboard" className="hover:text-green-primary">
+								Dashboard
+							</Link>
+							<Link href="/transaction" className="hover:text-green-primary">
+								Transaction
+							</Link>
+						</div>
 						<DropdownMenu>
 							<DropdownMenuTrigger>
 								<Image
@@ -73,6 +75,12 @@ export default function Navbar() {
 								<DropdownMenuSeparator />
 								<DropdownMenuItem>
 									<Link href="/profile">Profile</Link>
+								</DropdownMenuItem>
+								<DropdownMenuItem>
+									<Link href="/dashboard">Dashboard</Link>
+								</DropdownMenuItem>
+								<DropdownMenuItem>
+									<Link href="/transaction">Transaction</Link>
 								</DropdownMenuItem>
 								<DropdownMenuItem onClick={handleLogout}>
 									Log out

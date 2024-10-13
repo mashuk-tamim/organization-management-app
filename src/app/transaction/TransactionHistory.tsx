@@ -9,6 +9,7 @@ import {
 import AddTransactionDialog from "./AddTransactionDialog";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { TransactionHistoryProps } from "@/types/transactionHistory.type";
+import { Card } from "@/components/ui/card";
 
 export default function TransactionHistory({
 	transactions,
@@ -25,28 +26,30 @@ export default function TransactionHistory({
 				<h2 className="text-xl font-semibold">Transaction History</h2>
 				<AddTransactionDialog />
 			</div>
-			<Table>
-				<TableHeader>
-					<TableRow>
-						<TableHead>Date</TableHead>
-						<TableHead>Type</TableHead>
-						<TableHead>Category</TableHead>
-						<TableHead>Amount</TableHead>
-						<TableHead>Department</TableHead>
-					</TableRow>
-				</TableHeader>
-				<TableBody>
-					{transactions.map((transaction) => (
-						<TableRow key={transaction._id}>
-							<TableCell>{transaction.date}</TableCell>
-							<TableCell>{transaction.type}</TableCell>
-							<TableCell>{transaction.category}</TableCell>
-							<TableCell>${transaction.amount.toLocaleString()}</TableCell>
-							<TableCell>{transaction.department}</TableCell>
+			<Card className="p-2">
+				<Table>
+					<TableHeader>
+						<TableRow className="font-semibold md:text-lg">
+							<TableHead>Date</TableHead>
+							<TableHead>Type</TableHead>
+							<TableHead>Category</TableHead>
+							<TableHead>Amount</TableHead>
+							<TableHead>Department</TableHead>
 						</TableRow>
-					))}
-				</TableBody>
-			</Table>
+					</TableHeader>
+					<TableBody>
+						{transactions.map((transaction) => (
+							<TableRow key={transaction._id}>
+								<TableCell>{transaction.date}</TableCell>
+								<TableCell>{transaction.type}</TableCell>
+								<TableCell>{transaction.category}</TableCell>
+								<TableCell>${transaction.amount.toLocaleString()}</TableCell>
+								<TableCell>{transaction.department}</TableCell>
+							</TableRow>
+						))}
+					</TableBody>
+				</Table>
+			</Card>
 			{loading && (
 				<div className="w-full flex justify-center items-center">
 					<LoadingSpinner className=" my-2" />
