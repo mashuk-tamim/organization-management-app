@@ -84,7 +84,6 @@ export default function LoginForm() {
   
   const handleShowPassword = (value: boolean) => {
 		setShowPassword(value);
-		console.log(value);
 	};
 
 	return (

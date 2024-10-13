@@ -49,7 +49,6 @@ export default function RegisterForm() {
 
 	const handleShowPassword = (value: boolean) => {
 		setShowPassword(value);
-		console.log(value);
 	};
 	return (
 		<Card className="mx-auto max-w-md">
