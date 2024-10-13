@@ -5,7 +5,6 @@ import React from "react";
 import { Button } from "./ui/button";
 import { ThemeToggle } from "./ui/theme-toggle";
 import Image from "next/image";
-import logo from "@/public/logo.png";
 import { useUser } from "@/provider/UserContext";
 import {
 	DropdownMenu,
