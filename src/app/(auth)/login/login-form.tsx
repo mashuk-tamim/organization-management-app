@@ -14,11 +14,13 @@ import { FormField } from "@/components/ui/register-form-field";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { z } from "zod";
 import { useRegisterFormFieldValidation } from "@/hooks/useRegisterFormFieldValidation";
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import { IUser } from "@/types/user.interface";
 import { userValidationSchema } from "@/validation/user.validation";
 import { login } from "@/server/actions/login.action";
+import { useState } from "react";
+import { EyeClosedIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
+import { Eye } from "lucide-react";
 
 type LoginInResponseType = {
 	user: IUser | null;
@@ -30,6 +32,7 @@ type LoginInResponseType = {
 };
 
 export default function LoginForm() {
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [state, formAction] = useFormState<LoginInResponseType, FormData>(
 		signInUser,
 		{ user: null }
@@ -77,7 +80,12 @@ export default function LoginForm() {
 				error: "An unexpected error occurred during login",
 			};
 		}
-	}
+  }
+  
+  const handleShowPassword = (value: boolean) => {
+		setShowPassword(value);
+		console.log(value);
+	};
 
 	return (
 		<Card className="mx-auto max-w-md">
@@ -100,16 +108,30 @@ export default function LoginForm() {
 						clientError={errors.email}
 					/>
 
-					<FormField
-						id="password"
-						label="Password"
-						type="password"
-						placeholder="your password"
-						state={state}
-						required
-						onValueChange={handleFieldChange("password")}
-						clientError={errors.password}
-					/>
+					<div className="relative">
+						<FormField
+							id="password"
+							label="Password"
+							type={showPassword ? "text" : "password"}
+							placeholder="your password"
+							state={state}
+							required
+							onValueChange={handleFieldChange("password")}
+							clientError={errors.password}
+						/>
+						<Eye
+							onClick={() => handleShowPassword(false)}
+							className={`${
+								showPassword ? "block" : "hidden"
+							} size-5 absolute right-2 bottom-2`}
+						/>
+						<EyeClosedIcon
+							onClick={() => handleShowPassword(true)}
+							className={`${
+								showPassword ? "hidden" : "block"
+							} size-5 absolute right-2 bottom-2`}
+						/>
+					</div>
 
 					<SubmitButton buttonText="Login" />
 

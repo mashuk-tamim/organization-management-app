@@ -1,33 +1,37 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useFormState } from "react-dom";
+import type { z } from "zod";
+
 import { signIn } from "next-auth/react";
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import {
-	Card,
+  Card,
 	CardContent,
 	CardDescription,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
 import {
-	Select,
+  Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import type { z } from "zod";
 import { useRegisterFormFieldValidation } from "@/hooks/useRegisterFormFieldValidation";
 import { FormField } from "@/components/ui/register-form-field";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { useRouter } from "next/navigation";
 import { register, RegisterState } from "@/server/actions/register.action";
 import { userValidationSchema } from "@/validation/user.validation";
+import { Eye } from "lucide-react";
+import { EyeClosedIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
 
 export default function RegisterForm() {
+	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const { push } = useRouter();
 	const [state, registerFormAction] = useFormState<RegisterState, FormData>(
 		register,
@@ -43,6 +47,10 @@ export default function RegisterForm() {
 			validateField(name, value);
 		};
 
+	const handleShowPassword = (value: boolean) => {
+		setShowPassword(value);
+		console.log(value);
+	};
 	return (
 		<Card className="mx-auto max-w-md">
 			<CardHeader>
@@ -89,16 +97,30 @@ export default function RegisterForm() {
 						clientError={errors.email}
 					/>
 
-					<FormField
-						id="password"
-						label="Password"
-						type="password"
-						placeholder="your password"
-						state={state}
-						required
-						onValueChange={handleFieldChange("password")}
-						clientError={errors.password}
-					/>
+					<div className="relative">
+						<FormField
+							id="password"
+							label="Password"
+							type={showPassword ? "text" : "password"}
+							placeholder="your password"
+							state={state}
+							required
+							onValueChange={handleFieldChange("password")}
+							clientError={errors.password}
+						/>
+						<Eye
+							onClick={() => handleShowPassword(false)}
+							className={`${
+								showPassword ? "block" : "hidden"
+							} size-5 absolute right-2 bottom-2`}
+						/>
+						<EyeClosedIcon
+							onClick={() => handleShowPassword(true)}
+							className={`${
+								showPassword ? "hidden" : "block"
+							} size-5 absolute right-2 bottom-2`}
+						/>
+					</div>
 
 					<div>
 						<label htmlFor="gender" className="block text-sm font-medium">
@@ -141,7 +163,7 @@ export default function RegisterForm() {
 						clientError={errors.profileImg}
 					/>
 
-					<SubmitButton buttonText="Register"/>
+					<SubmitButton buttonText="Register" />
 
 					<Button
 						onClick={() => signIn("github")}
