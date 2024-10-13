@@ -15,9 +15,9 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { logout } from "@/app/api/logout/route";
 import { useRouter } from "next/navigation";
 import { BarChart3 } from "lucide-react";
+import { logout } from "@/server/actions/login.action";
 
 export default function Navbar() {
 	const { user, setUser, loading } = useUser();
