@@ -19,12 +19,14 @@ import { logout } from "@/app/api/logout/route";
 import { useRouter } from "next/navigation";
 
 export default function Navbar() {
-	const { user, loading } = useUser();
-	console.log(user);
+	const { user, setUser, loading } = useUser();
 	const router = useRouter();
 
 	const handleLogout = async () => {
-		await logout();
+    const response = await logout();
+    if (response.success) {
+      setUser(null);
+    }
 		router.refresh();
 	};
 	return (

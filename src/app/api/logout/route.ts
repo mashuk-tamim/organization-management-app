@@ -9,7 +9,5 @@ export async function logout() {
 		path: "/",
 		expires: new Date(0), // Set an expiration date in the past to clear the cookie
 	});
-
-	redirect("/login");
 	return { success: true };
 }

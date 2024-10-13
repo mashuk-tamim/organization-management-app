@@ -21,6 +21,7 @@ import { login } from "@/server/actions/login.action";
 import { useState } from "react";
 import { EyeClosedIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
 import { Eye } from "lucide-react";
+import { useUser } from "@/provider/UserContext";
 
 type LoginInResponseType = {
 	user: IUser | null;
@@ -32,6 +33,7 @@ type LoginInResponseType = {
 };
 
 export default function LoginForm() {
+  const { setUser } = useUser();
   const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [state, formAction] = useFormState<LoginInResponseType, FormData>(
 		signInUser,
@@ -51,9 +53,10 @@ export default function LoginForm() {
 		formData: FormData
 	): Promise<typeof prevState> {
 		try {
-			const response = await login(prevState, formData);
+      const response = await login(prevState, formData);
 
-			if (response?.success) {
+      if (response?.success) {
+        setUser(response.user);
 				push("/dashboard");
 			}
 

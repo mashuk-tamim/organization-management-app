@@ -93,8 +93,6 @@ export async function login(
 				validationErrors: errors,
 			};
 		}
-
-		console.log("Login error:", error);
 		return {
 			user: null,
 			error: "Something went wrong. Please try again.",

@@ -14,14 +14,12 @@ export async function GET(request: NextRequest) {
 
 	try {
 		const payload = await verifyJWT(token.value); // Verify token and extract userId
-		console.log("get user payload:", payload);
+		// console.log("get user payload:", payload);
 		await connectDB();
 		const userId = payload?.userId as string;
-		console.log("userId", userId);
 		// Convert userId to a MongoDB ObjectId
-		const objectId = new mongoose.Types.ObjectId(userId);
-		console.log("objectId", objectId);
-
+    const objectId = new mongoose.Types.ObjectId(userId);
+    
 		const user = await User.findById(objectId).select("-password");
 
 		if (!user) {

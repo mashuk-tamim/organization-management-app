@@ -4,11 +4,13 @@ import { IUser } from "@/types/user.interface";
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 interface UserContextType {
-	user: IUser | null;
+  user: IUser | null;
+  setUser: (user: IUser | null) => void;
 	loading: boolean;
 }
 const UserContext = createContext<UserContextType>({
-	user: null,
+  user: null,
+  setUser: () => {},
 	loading: true,
 });
 
@@ -42,7 +44,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 		return null;
 	}
 
-	return <UserContext.Provider value={{user, loading}}>{children}</UserContext.Provider>;
+	return <UserContext.Provider value={{user, setUser, loading}}>{children}</UserContext.Provider>;
 };
 
 export const useUser = () => useContext(UserContext);
