@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
 import { Toaster } from "sonner";
 import { TransactionProvider } from "@/provider/TransactionContext";
 import { ThemeProvider } from "@/provider/ThemeProvider";
+// import NavbarWrapper from "@/components/NavbarWrapper";
+import Navbar from "@/components/Navbar";
+import { UserProvider } from "@/provider/UserContext";
 
 const geistSans = localFont({
 	src: "./fonts/GeistVF.woff",
@@ -32,18 +34,20 @@ export default async function RootLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
-				<TransactionProvider>
-					<ThemeProvider
-						attribute="class"
-						defaultTheme="system"
-						enableSystem
-						disableTransitionOnChange
-					>
-						<Navbar />
-						{children}
-						<Toaster richColors />
-					</ThemeProvider>
-				</TransactionProvider>
+				<UserProvider>
+					<TransactionProvider>
+						<ThemeProvider
+							attribute="class"
+							defaultTheme="system"
+							enableSystem
+							disableTransitionOnChange
+						>
+							<Navbar />
+							{children}
+							<Toaster richColors />
+						</ThemeProvider>
+					</TransactionProvider>
+				</UserProvider>
 			</body>
 		</html>
 	);

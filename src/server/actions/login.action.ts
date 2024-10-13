@@ -2,14 +2,15 @@
 
 import { loginValidationSchema } from "@/validation/login.validation";
 import bcrypt from "bcryptjs";
-
 import z from "zod";
 import connectDB from "../config/db";
 import User from "../models/user.model";
 import { IUser } from "@/types/user.interface";
+import { cookies } from "next/headers";
+import { signJWT } from "../utils/jwt";
 
 export type LoginState = {
-  user: IUser | null;
+	user: IUser | null;
 	error?: string;
 	success?: boolean;
 	message?: string;
@@ -41,8 +42,8 @@ export async function login(
 		const existingUser = await User.findOne({ email }).select("+password");
 
 		if (!existingUser) {
-      return {
-        user: null,
+			return {
+				user: null,
 				error: "Invalid email or password.",
 			};
 		}
@@ -54,13 +55,27 @@ export async function login(
 		);
 
 		if (!isPasswordMatch) {
-      return {
-        user: null,
+			return {
+				user: null,
 				error: "Invalid email or password.",
 			};
 		}
 
-    return {
+		const userId = existingUser._id.toString();
+
+		// Create jwt token
+		const accessToken = await signJWT(userId);
+
+		// Assign the cookie
+		cookies().set("access_token", accessToken, {
+			secure: true,
+			httpOnly: true,
+			expires: Date.now() + 1000 * 60 * 60 * 24 * 30, // 30 days
+			path: "/",
+			sameSite: "strict",
+		});
+
+		return {
 			user: existingUser,
 			success: true,
 			message: "Login successful.",
@@ -72,16 +87,16 @@ export async function login(
 				path: err.path.join("."),
 				message: err.message,
 			}));
-      return {
-        user: null,
+			return {
+				user: null,
 				error: "Validation failed",
 				validationErrors: errors,
 			};
 		}
 
-    console.log("Login error:", error);
-    return {
-      user: null,
+		console.log("Login error:", error);
+		return {
+			user: null,
 			error: "Something went wrong. Please try again.",
 		};
 	}
