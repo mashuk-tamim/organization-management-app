@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/provider/ThemeProvider";
 // import NavbarWrapper from "@/components/NavbarWrapper";
 import Navbar from "@/components/Navbar";
 import { UserProvider } from "@/provider/UserContext";
+import Footer from "@/components/Footer";
 
 const geistSans = localFont({
 	src: "./fonts/GeistVF.woff",
@@ -43,7 +44,8 @@ export default async function RootLayout({
 							disableTransitionOnChange
 						>
 							<Navbar />
-							{children}
+              {children}
+              <Footer/>
 							<Toaster richColors />
 						</ThemeProvider>
 					</TransactionProvider>

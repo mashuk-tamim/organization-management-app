@@ -17,87 +17,74 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { logout } from "@/app/api/logout/route";
 import { useRouter } from "next/navigation";
+import { BarChart3 } from "lucide-react";
 
 export default function Navbar() {
 	const { user, setUser, loading } = useUser();
 	const router = useRouter();
 
 	const handleLogout = async () => {
-    const response = await logout();
-    if (response.success) {
-      setUser(null);
-    }
+		const response = await logout();
+		if (response.success) {
+			setUser(null);
+		}
 		router.refresh();
 	};
+
 	return (
-		<nav className="w-screen flex justify-between gap-4 font-medium py-4 px-10">
+		<nav className="w-full flex justify-between items-center gap-4 font-medium py-4 px-10">
 			<div>
 				<Link href="/" className="flex gap-1 items-center">
-					<Image src={logo} alt="logo" className="size-6" />
-					<h1 className="text-[#4ed162] text-xl font-bold cursor-pointer">
+					{/* <Image src={logo} alt="logo" className="size-6" /> */}
+					<BarChart3 className="h-6 w-6 text-green-primary" />
+					<h1 className="text-green-primary text-xl font-bold cursor-pointer">
 						Expensee
 					</h1>
 				</Link>
 			</div>
-			<div className="flex gap-4 font-medium">
-				<Link href="/" className="hover:text-[#4ed162]">
-					Home
-				</Link>
-				<Link href="/dashboard" className="hover:text-[#4ed162]">
-					Dashboard
-				</Link>
-				<Link href="/transaction" className="hover:text-[#4ed162]">
-					Transaction
-				</Link>
-			</div>
-			<div className="flex gap-4">
+			<div className="flex items-center gap-4">
 				<div>
 					<ThemeToggle />
 				</div>
-				<div className="flex gap-4">
-					{loading ? (
-						// Show a loading indicator or skeleton
-						<div className="animate-pulse bg-gray-200 rounded-full size-9"></div>
-					) : user ? (
-						<div className="flex items-center">
-							<div className="flex items-center">
-								<DropdownMenu>
-									<DropdownMenuTrigger>
-										<Image
-											src={
-												user.profileImg ||
-												"https://i.ibb.co.com/pJ8HzFy/60111.jpg"
-											}
-											alt={`${user.lastName}'s profile`}
-											width={100}
-											height={100}
-											className="size-9 rounded-full border"
-										/>
-									</DropdownMenuTrigger>
-									<DropdownMenuContent>
-										<DropdownMenuLabel>My Account</DropdownMenuLabel>
-										<DropdownMenuSeparator />
-										<DropdownMenuItem>
-											<Link href="/profile">Profile</Link>
-										</DropdownMenuItem>
-										<DropdownMenuItem onClick={handleLogout}>
-											Log out
-										</DropdownMenuItem>
-									</DropdownMenuContent>
-								</DropdownMenu>
-							</div>
-						</div>
-					) : (
-						<>
-							<Button>
-								<Link href="/login">Login</Link>
-							</Button>
-							<Button>
-								<Link href="/register">Register</Link>
-							</Button>
-						</>
-					)}
-				</div>
+				{loading ? (
+					<div className="animate-pulse bg-gray-200 rounded-full size-9"></div>
+				) : user ? (
+					<>
+						<Link href="/dashboard" className="hover:text-green-primary">
+							Dashboard
+						</Link>
+						<Link href="/transaction" className="hover:text-green-primary">
+							Transaction
+						</Link>
+						<DropdownMenu>
+							<DropdownMenuTrigger>
+								<Image
+									src={
+										user.profileImg || "https://i.ibb.co.com/pJ8HzFy/60111.jpg"
+									}
+									alt={`${user.lastName}'s profile`}
+									width={100}
+									height={100}
+									className="size-9 rounded-full border"
+								/>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent>
+								<DropdownMenuLabel>My Account</DropdownMenuLabel>
+								<DropdownMenuSeparator />
+								<DropdownMenuItem>
+									<Link href="/profile">Profile</Link>
+								</DropdownMenuItem>
+								<DropdownMenuItem onClick={handleLogout}>
+									Log out
+								</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
+					</>
+				) : (
+					<Button asChild>
+						<Link href="/login">Login</Link>
+					</Button>
+				)}
 			</div>
 		</nav>
 	);
