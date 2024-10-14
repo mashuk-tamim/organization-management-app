@@ -52,7 +52,7 @@ export default function AddTransactionDialog() {
 	// This useEffect will run after a successful transaction is added
 	useEffect(() => {
 		if (state?.success) {
-			fetchTransactions(); // Fetch updated transactions
+      fetchTransactions();
 			toast.success(state.message);
 
 			// Reset form fields and state

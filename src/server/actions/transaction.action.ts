@@ -130,3 +130,25 @@ export async function getAllTransactions() {
 		};
 	}
 }
+
+export async function getTransactionById(transactionId: string) {
+	try {
+		console.log(`Fetching transaction with ID: ${transactionId}`);
+		const response = await fetch(
+			`http://localhost:3000/api/transaction?id=${transactionId}`
+		);
+
+		console.log(`Response status: ${response.status}`);
+		if (!response.ok) {
+			throw new Error(`Error: ${response.status}`);
+		}
+
+		const data = await response.json();
+		console.log("Received data:", data);
+		return data.transaction;
+	} catch (error) {
+		console.error("Failed to fetch transaction:", error);
+		return null;
+	}
+}
+
