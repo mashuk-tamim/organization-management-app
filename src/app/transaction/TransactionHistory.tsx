@@ -1,15 +1,16 @@
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "@/components/ui/table";
+// import {
+// 	Table,
+// 	TableBody,
+// 	TableCell,
+// 	TableHead,
+// 	TableHeader,
+// 	TableRow,
+// } from "@/components/ui/table";
 import AddTransactionDialog from "./AddTransactionDialog";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { TransactionHistoryProps } from "@/types/transactionHistory.type";
-import { Card } from "@/components/ui/card";
+import { DataTable } from "./data-table";
+import { columns } from "./columns";
 
 export default function TransactionHistory({
 	transactions,
@@ -18,7 +19,10 @@ export default function TransactionHistory({
 }: TransactionHistoryProps) {
 	if (!errorMessage) {
 		<p className="text-sm text-red-500">{errorMessage}</p>;
-	}
+  }
+  
+  // console.log(transactions)
+
 
 	return (
 		<div className="mb-6">
@@ -26,8 +30,9 @@ export default function TransactionHistory({
 				<h2 className="text-xl font-semibold">Transaction History</h2>
 				<AddTransactionDialog />
 			</div>
-			<Card className="p-2">
-				<Table>
+
+			<DataTable columns={columns} data={transactions} />
+			{/* <Table>
 					<TableHeader>
 						<TableRow className="font-semibold md:text-lg">
 							<TableHead>Date</TableHead>
@@ -48,8 +53,8 @@ export default function TransactionHistory({
 							</TableRow>
 						))}
 					</TableBody>
-				</Table>
-			</Card>
+				</Table> */}
+
 			{loading && (
 				<div className="w-full flex justify-center items-center">
 					<LoadingSpinner className=" my-2" />

@@ -8,7 +8,6 @@ import { useTransactionContext } from "@/provider/TransactionContext";
 export default function TransactionPage() {
 	const { transactions, loading, errorMessage } = useTransactionContext();
 
-
 	return (
 		<div className="container mx-auto p-6">
 			<h1 className="text-3xl font-bold mb-6">Transaction Management</h1>
