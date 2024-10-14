@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import AddTransactionDialog from "./AddTransactionDialog";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
 import { DataTablePagination } from "./data-table-pagination";
@@ -19,15 +18,13 @@ export default function TransactionHistory({
 		initialData.data || []
 	);
 	const [pageCount, setPageCount] = useState(initialData.totalPages || 1);
-  const [loading, setLoading] = useState(false);
-  
-  console.log(initialData)
 
-  const currentPage = Number(searchParams.get("page") || "1");
+	console.log(initialData);
+
+	const currentPage = Number(searchParams.get("page") || "1");
 
 	useEffect(() => {
 		const fetchTransactions = async () => {
-			setLoading(true);
 			try {
 				const res = await fetch(
 					`/api/transactions?page=${currentPage}&limit=10`
@@ -39,8 +36,6 @@ export default function TransactionHistory({
 			} catch (error) {
 				console.error("Error fetching transactions:", error);
 				// Handle error (e.g., show error message to user)
-			} finally {
-				setLoading(false);
 			}
 		};
 
@@ -48,7 +43,7 @@ export default function TransactionHistory({
 	}, [currentPage]);
 
 	const handlePageChange = (newPage: number) => {
-		router.push(`/transaction?page=${newPage}`);
+		router.push(`/transaction?page=${newPage}&limit=10`);
 	};
 
 	return (
@@ -57,14 +52,7 @@ export default function TransactionHistory({
 				<h2 className="text-xl font-semibold">Transaction History</h2>
 				<AddTransactionDialog />
 			</div>
-
-			{loading ? (
-				<div className="flex justify-center items-center">
-					<LoadingSpinner className="" />
-				</div>
-			) : (
-          <DataTable columns={columns} data={transactions}/>
-			)}
+			<DataTable columns={columns} data={transactions} />
 
 			<DataTablePagination
 				currentPage={currentPage}

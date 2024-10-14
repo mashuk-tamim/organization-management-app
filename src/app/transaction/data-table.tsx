@@ -8,9 +8,9 @@ import {
 	getFilteredRowModel,
 	getSortedRowModel,
 	useReactTable,
-	type ColumnDef,
-	type ColumnFiltersState,
-	type SortingState,
+	ColumnDef,
+	ColumnFiltersState,
+	SortingState,
 } from "@tanstack/react-table";
 
 import {
@@ -48,14 +48,14 @@ export function DataTable<TData, TValue>({
 		enableRowSelection: true,
 		onSortingChange: setSorting,
 		onColumnFiltersChange: setColumnFilters,
-		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
+		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getFacetedRowModel: getFacetedRowModel(),
 		getFacetedUniqueValues: getFacetedUniqueValues(),
 		manualPagination: true,
-		manualSorting: true,
-		manualFiltering: true,
+		// manualSorting: true,
+		// manualFiltering: true,
 	});
 
 	return (
@@ -85,7 +85,7 @@ export function DataTable<TData, TValue>({
 												: flexRender(
 														header.column.columnDef.header,
 														header.getContext()
-												  )}
+												)}
 										</TableHead>
 									);
 								})}

@@ -25,7 +25,8 @@ export async function GET(request: Request) {
 			currentPage: page,
 			totalPages: Math.ceil(totalTransactions / limit),
 		});
-	} catch (error) {
+  } catch (error: any) {
+    console.log(error);
 		return NextResponse.json(
 			{ error: "Error fetching transactions" },
 			{ status: 500 }

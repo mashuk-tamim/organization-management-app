@@ -34,7 +34,7 @@ export default function AddTransactionDialog() {
 		"Income" | "Expense" | null
 	>(null);
 
-	const { fetchTransactions, updateTransactions } = useTransactionContext();
+	const { fetchTransactions } = useTransactionContext();
 
 	const formRef = useRef<HTMLFormElement>(null);
 
@@ -52,12 +52,7 @@ export default function AddTransactionDialog() {
 	// This useEffect will run after a successful transaction is added
 	useEffect(() => {
 		if (state?.success) {
-			const newTransaction = state.data; // assuming state.data contains the newly added transaction
-
-			// Update transactions locally without refetching everything
-			if (newTransaction) {
-				updateTransactions(newTransaction);
-			}
+      fetchTransactions();
 			toast.success(state.message);
 
 			// Reset form fields and state

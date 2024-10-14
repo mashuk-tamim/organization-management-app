@@ -48,23 +48,12 @@ export const TransactionProvider = ({
 		fetchTransactions();
 	}, []);
 
-	// Function to update transactions (only update changed ones)
-	const updateTransactions = (newTransaction: ITransaction) => {
-		setTransactions((prevTransactions) => {
-			const updatedTransactions = prevTransactions.map((transaction) =>
-				transaction._id === newTransaction._id ? newTransaction : transaction
-			);
-			return updatedTransactions;
-		});
-	};
-
 	return (
 		<TransactionContext.Provider
 			value={{
 				transactions,
 				setTransactions,
-        fetchTransactions,
-        updateTransactions,
+				fetchTransactions,
 				loading,
 				errorMessage,
 			}}

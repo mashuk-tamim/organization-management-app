@@ -30,8 +30,6 @@ export async function GET(request: NextRequest) {
 			);
 		}
 
-		// const validTransactionId = new mongoose.Types.ObjectId(transactionId);
-
 		// Find the transaction by its ID
 		const transaction = await Transaction.findById(transactionId);
 

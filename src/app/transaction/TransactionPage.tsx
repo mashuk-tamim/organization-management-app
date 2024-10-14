@@ -6,6 +6,7 @@ import TransactionHistory from "./TransactionHistory";
 import TransactionSummary from "./TransactionSummary";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { ITransaction } from "@/types/transaction.interface";
+import { useTransactionContext } from "@/provider/TransactionContext";
 
 export type initialDataType = {
 	data: ITransaction[];
@@ -16,6 +17,7 @@ export type initialDataType = {
 export default function TransactionPage() {
 	const [initialData, setInitialData] = useState<initialDataType | null>(null);
 	const [loading, setLoading] = useState(true);
+	const { transactions } = useTransactionContext();
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -29,7 +31,7 @@ export default function TransactionPage() {
 		};
 
 		fetchData();
-	}, []);
+	}, [transactions]);
 
 	console.log(initialData);
 
@@ -48,7 +50,7 @@ export default function TransactionPage() {
 					</Suspense>
 					<Suspense fallback={<LoadingSpinner className="" />}>
 						<TransactionSummary
-							transactions={initialData.data}
+							transactions={transactions}
 							loading={false}
 						/>
 					</Suspense>
