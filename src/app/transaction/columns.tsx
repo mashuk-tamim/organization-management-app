@@ -3,6 +3,8 @@
 import { ITransaction } from "@/types/transaction.interface";
 import { ColumnDef } from "@tanstack/react-table";
 import TransactionActions from "./transaction-actions";
+import { Button } from "@/components/ui/button";
+import { ArrowUpDown } from "lucide-react";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -10,7 +12,17 @@ import TransactionActions from "./transaction-actions";
 export const columns: ColumnDef<ITransaction>[] = [
 	{
 		accessorKey: "date",
-		header: "Date",
+		header: ({ column }) => {
+			return (
+        <div
+          className="flex"
+					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+				>
+					Date
+					<ArrowUpDown className="ml-2 h-4 w-4" />
+				</div>
+			);
+		},
 	},
 	{
 		accessorKey: "type",
@@ -22,7 +34,17 @@ export const columns: ColumnDef<ITransaction>[] = [
 	},
 	{
 		accessorKey: "amount",
-		header: "Amount",
+		header: ({ column }) => {
+			return (
+        <div
+          className="flex"
+					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+				>
+					Amount
+					<ArrowUpDown className="ml-2 h-4 w-4" />
+				</div>
+			);
+		},
 		cell: ({ row }) => {
 			const amount = parseFloat(row.getValue("amount"));
 			const formatted = new Intl.NumberFormat("en-US", {
