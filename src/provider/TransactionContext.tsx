@@ -26,35 +26,45 @@ export const TransactionProvider = ({
 }) => {
 	const [transactions, setTransactions] = useState<ITransaction[]>([]);
 	const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("");
-
+	const [errorMessage, setErrorMessage] = useState("");
 
 	const fetchTransactions = async () => {
 		try {
 			setLoading(true);
 			const result = await getAllTransactions();
-      if (result.success && result.data) {
-        setTransactions(result.data);
+			if (result.success && result.data) {
+				setTransactions(result.data);
 			} else {
-        setErrorMessage(result.error || "Failed to fetch transactions");
+				setErrorMessage(result.error || "Failed to fetch transactions");
 			}
 			setLoading(false);
 		} catch (error) {
-      console.error("Error fetching transactions:", error);
+			console.error("Error fetching transactions:", error);
 			setLoading(false);
 		}
 	};
-  
+
 	useEffect(() => {
-    fetchTransactions();
+		fetchTransactions();
 	}, []);
-  
+
+	// Function to update transactions (only update changed ones)
+	const updateTransactions = (newTransaction: ITransaction) => {
+		setTransactions((prevTransactions) => {
+			const updatedTransactions = prevTransactions.map((transaction) =>
+				transaction._id === newTransaction._id ? newTransaction : transaction
+			);
+			return updatedTransactions;
+		});
+	};
+
 	return (
 		<TransactionContext.Provider
 			value={{
 				transactions,
 				setTransactions,
-				fetchTransactions,
+        fetchTransactions,
+        updateTransactions,
 				loading,
 				errorMessage,
 			}}

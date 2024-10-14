@@ -1,28 +1,55 @@
-// import {
-// 	Table,
-// 	TableBody,
-// 	TableCell,
-// 	TableHead,
-// 	TableHeader,
-// 	TableRow,
-// } from "@/components/ui/table";
+import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import AddTransactionDialog from "./AddTransactionDialog";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { TransactionHistoryProps } from "@/types/transactionHistory.type";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
+import { DataTablePagination } from "./data-table-pagination";
+import { ITransaction } from "@/types/transaction.interface";
+import { initialDataType } from "./TransactionPage";
 
 export default function TransactionHistory({
-	transactions,
-	loading,
-	errorMessage,
-}: TransactionHistoryProps) {
-	if (!errorMessage) {
-		<p className="text-sm text-red-500">{errorMessage}</p>;
-  }
+	initialData,
+}: {
+	initialData: initialDataType;
+}) {
+	const router = useRouter();
+	const searchParams = useSearchParams();
+	const [transactions, setTransactions] = useState<ITransaction[]>(
+		initialData.data || []
+	);
+	const [pageCount, setPageCount] = useState(initialData.totalPages || 1);
+  const [loading, setLoading] = useState(false);
   
-  // console.log(transactions)
+  console.log(initialData)
 
+  const currentPage = Number(searchParams.get("page") || "1");
+
+	useEffect(() => {
+		const fetchTransactions = async () => {
+			setLoading(true);
+			try {
+				const res = await fetch(
+					`/api/transactions?page=${currentPage}&limit=10`
+				);
+				if (!res.ok) throw new Error("Failed to fetch transactions");
+				const data = await res.json();
+				setTransactions(data.data);
+				setPageCount(data.totalPages);
+			} catch (error) {
+				console.error("Error fetching transactions:", error);
+				// Handle error (e.g., show error message to user)
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		fetchTransactions();
+	}, [currentPage]);
+
+	const handlePageChange = (newPage: number) => {
+		router.push(`/transaction?page=${newPage}`);
+	};
 
 	return (
 		<div className="mb-6">
@@ -31,35 +58,19 @@ export default function TransactionHistory({
 				<AddTransactionDialog />
 			</div>
 
-			<DataTable columns={columns} data={transactions} />
-			{/* <Table>
-					<TableHeader>
-						<TableRow className="font-semibold md:text-lg">
-							<TableHead>Date</TableHead>
-							<TableHead>Type</TableHead>
-							<TableHead>Category</TableHead>
-							<TableHead>Amount</TableHead>
-							<TableHead>Department</TableHead>
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						{transactions.map((transaction) => (
-							<TableRow key={transaction._id}>
-								<TableCell>{transaction.date}</TableCell>
-								<TableCell>{transaction.type}</TableCell>
-								<TableCell>{transaction.category}</TableCell>
-								<TableCell>${transaction.amount.toLocaleString()}</TableCell>
-								<TableCell>{transaction.department}</TableCell>
-							</TableRow>
-						))}
-					</TableBody>
-				</Table> */}
-
-			{loading && (
-				<div className="w-full flex justify-center items-center">
-					<LoadingSpinner className=" my-2" />
+			{loading ? (
+				<div className="flex justify-center items-center">
+					<LoadingSpinner className="" />
 				</div>
+			) : (
+          <DataTable columns={columns} data={transactions}/>
 			)}
+
+			<DataTablePagination
+				currentPage={currentPage}
+				totalPages={pageCount}
+				onPageChange={handlePageChange}
+			/>
 		</div>
 	);
 }
