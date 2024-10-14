@@ -1,5 +1,7 @@
 # Organization Management App
 
+[Live Site](https://organization-management-mashuk.vercel.app/)
+
 This is a web application that allows users to manage transactions and view data in a dashboard, with breakdowns based on weekly, monthly, and yearly transactions. I utilized **Recharts** for displaying charts and **TanStack Table** for building dynamic, filterable, and sortable tables. The app is built using **Next.js 14**, **MongoDB**, **Mongoose**, and **Tailwind CSS** for the frontend design. I also implemented **server actions** for optimized server-side logic handling.
 
 ## Features
