@@ -2,20 +2,22 @@
 
 [Live Site](https://organization-management-mashuk.vercel.app/)
 
-This is a web application that allows users to manage transactions and view data in a dashboard, with breakdowns based on weekly, monthly, and yearly transactions. I utilized **Recharts** for displaying charts and **TanStack Table** for building dynamic, filterable, and sortable tables. The app is built using **Next.js 14**, **MongoDB**, **Mongoose**, and **Tailwind CSS** for the frontend design. I also implemented **server actions** for optimized server-side logic handling.
+This web application allows users to manage transactions and view data in a dashboard with breakdowns based on weekly, monthly, and yearly transactions. It uses **Recharts** for displaying charts and **TanStack Table** for building dynamic, filterable, and sortable tables. The app is built using **Next.js 14**, **MongoDB**, **Mongoose**, and **Tailwind CSS** for the frontend design, with **server actions** and **route handler** for optimized server-side logic handling.
 
 ## Features
 
 - **Transaction Management**: Users can add, view, and manage transactions.
 - **Dashboard Overview**: Displays charts and transaction summaries (weekly, monthly, yearly).
-- **Client and Server-Side Validation**: Ensures that all data is validated properly both client-side (using Zod) and server-side (for secure and error-free transactions).
+- **Client and Server-Side Validation**: Ensures that all data is validated properly both client-side (using Zod) and server-side for secure and error-free transactions.
 - **Secure Login with Http-only Cookie**: Provides a secure login system using encrypted cookies to store JWT tokens.
 - **Responsive Design**: Optimized for small, medium, and large devices.
 - **Beautiful UI**: The interface is clean, user-friendly, and accessible.
-- **Reusable Components and Hooks**: The project is organized with reusable components and custom hooks following good practices.
-- **Transaction History Table**: Filter, sort, and paginate transaction data seamlessly.
-- **Dashboard Features**: Dynamic and detailed representation of data in charts for easy analysis.
-- **Pagination**: Server-side pagination for efficient data loading and better user experience.
+- **Reusable Components and Hooks**: Organized with reusable components and custom hooks following best practices.
+- **Transaction History Table**: 
+  - **Server-Side Filtering**: Allows multiple filters to be applied at once.
+  - **Server-Side Sorting**: Sorting can be done on multiple columns.
+  - **Server-Side Pagination**: Server-side pagination for efficient data handling.
+  - **Loading State**: Skeleton table displayed while fetching data.
 
 ## Tech Stack
 
@@ -25,7 +27,7 @@ This is a web application that allows users to manage transactions and view data
 - **Recharts**: For interactive and dynamic charts.
 - **TanStack Table**: For advanced table features like filtering, sorting, and pagination.
 - **Zod**: For schema-based validation of input data.
-- **NextAuth v5**: Used for user authentication with secure cookies.
+- **Jose**: Used for user authentication with secure http-only cookies.
 
 ## Why I Used These Technologies
 
@@ -42,9 +44,11 @@ This is a web application that allows users to manage transactions and view data
 
 ## Next Steps
 
-- **Server-Side Filtering & Sorting**: Enhance performance by offloading filtering and sorting to the server-side.
+- **Server-Side Data Fetching for Dashboard**: Plan to implement server-side data fetching and visualize transactions through charts and diagrams in Database.
 - **Role-Based Authorization**: Implement user roles and permissions for different functionalities within the app.
-- **Google & GitHub Login**: Add Google and GitHub providers for user login using NextAuth v5.
+- **Google & GitHub Login**: Add Google and GitHub providers for user login.
+- **Redux**: Implement redux for complex state management.
+- **React Query**: Immplement React Query for advanced features.
 
 
 ## How to Run the Project
