@@ -3,6 +3,7 @@ import {
 	Select,
 	SelectContent,
 	SelectItem,
+	SelectLabel,
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
@@ -53,9 +54,10 @@ export default function FilterColumn({
 					}
 				>
 					<SelectTrigger className="w-[180px]">
-						<SelectValue placeholder="Filter by Category" />
+						<SelectValue placeholder="Filter by Categories" />
 					</SelectTrigger>
 					<SelectContent>
+						<SelectItem value="all">All Categories</SelectItem>
 						{incomeCategories.map((category) => (
 							<SelectItem
 								key={category}
@@ -90,7 +92,7 @@ export default function FilterColumn({
 					onValueChange={(value) =>
 						handleFilterChange("department", value === "all" ? null : value)
 					}
-				>
+        >
 					<SelectTrigger className="w-[180px]">
 						<SelectValue placeholder="Filter by Department" />
 					</SelectTrigger>
