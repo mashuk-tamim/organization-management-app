@@ -8,6 +8,7 @@ import { ITransaction } from "@/types/transaction.interface";
 import RowLimit from "./row-limit";
 import SortColumn from "./sort-column";
 import TableSkeleton from "./table-skeleton";
+import FilterColumn from "./filter-column";
 
 export default function TransactionHistory() {
 	const router = useRouter();
@@ -15,8 +16,8 @@ export default function TransactionHistory() {
 
 	const [transactions, setTransactions] = useState<ITransaction[]>([]);
 	const [totalPages, setTotalPages] = useState(1);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(false);
 	const [sortField, setSortField] = useState<string | null>(null);
 	const [sortOrder, setSortOrder] = useState<"default" | "asc" | "desc">(
 		"default"
@@ -28,13 +29,22 @@ export default function TransactionHistory() {
 	const currentPage = Number(searchParams.get("page") || "1");
 	const limit = Number(searchParams.get("limit") || "10");
 
-  const fetchTransactions = useCallback(async () => {
-    setIsLoading(true)
+	// New state for filters
+	const [typeFilter, setTypeFilter] = useState<string | null>(null);
+	const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+	const [departmentFilter, setDepartmentFilter] = useState<string | null>(null);
+
+	const fetchTransactions = useCallback(async () => {
+		setIsLoading(true);
 		try {
 			let apiUrl = `/api/transaction?page=${currentPage}&limit=${limit}`;
 			if (sortField && sortOrder && sortOrder !== "default") {
 				apiUrl += `&sortField=${sortField}&sortOrder=${sortOrder}`;
 			}
+
+			if (typeFilter) apiUrl += `&type=${typeFilter}`;
+			if (categoryFilter) apiUrl += `&category=${categoryFilter}`;
+			if (departmentFilter) apiUrl += `&department=${departmentFilter}`;
 
 			const res = await fetch(apiUrl);
 			if (!res.ok) throw new Error("Failed to fetch transactions");
@@ -48,13 +58,21 @@ export default function TransactionHistory() {
 		} finally {
 			setIsLoading(false);
 		}
-	}, [currentPage, limit, sortField, sortOrder]);
+	}, [
+		currentPage,
+		limit,
+		sortField,
+		sortOrder,
+		typeFilter,
+		categoryFilter,
+		departmentFilter,
+	]);
 
 	useEffect(() => {
 		fetchTransactions();
 	}, [fetchTransactions]);
-  
-  const updateURL = useCallback(
+
+	const updateURL = useCallback(
 		(newParams: Record<string, string>) => {
 			const current = new URLSearchParams(Array.from(searchParams.entries()));
 			Object.entries(newParams).forEach(([key, value]) => {
@@ -69,33 +87,51 @@ export default function TransactionHistory() {
 		[router, searchParams]
 	);
 
-const handlePageChange = useCallback(
-	(newPage: number) => {
-		updateURL({ page: newPage.toString() });
-	},
-	[updateURL]
-);
+	const handlePageChange = useCallback(
+		(newPage: number) => {
+			updateURL({ page: newPage.toString() });
+		},
+		[updateURL]
+	);
 
-const handleLimitChange = useCallback(
-	(newLimit: number) => {
-		updateURL({ page: "1", limit: newLimit.toString() });
-	},
-	[updateURL]
-);
+	const handleLimitChange = useCallback(
+		(newLimit: number) => {
+			updateURL({ page: "1", limit: newLimit.toString() });
+		},
+		[updateURL]
+	);
 
-const handleSortChange = useCallback(
-	(newField: string | null, newOrder: "default" | "asc" | "desc") => {
-		setSortField(newField);
-		setSortOrder(newOrder);
+	const handleSortChange = useCallback(
+		(newField: string | null, newOrder: "default" | "asc" | "desc") => {
+			setSortField(newField);
+			setSortOrder(newOrder);
 
-		if (newOrder === "default" || newField === null) {
-			updateURL({ page: "1", sortField: "", sortOrder: "" });
-		} else {
-			updateURL({ page: "1", sortField: newField, sortOrder: newOrder });
-		}
-	},
-	[updateURL]
-);
+			if (newOrder === "default" || newField === null) {
+				updateURL({ page: "1", sortField: "", sortOrder: "" });
+			} else {
+				updateURL({ page: "1", sortField: newField, sortOrder: newOrder });
+			}
+		},
+		[updateURL]
+	);
+
+	const handleFilterChange = useCallback(
+		(filterType: string, value: string | null) => {
+			switch (filterType) {
+				case "type":
+					setTypeFilter(value);
+					break;
+				case "category":
+					setCategoryFilter(value);
+					break;
+				case "department":
+					setDepartmentFilter(value);
+					break;
+			}
+			updateURL({ page: "1", [filterType]: value || "" });
+		},
+		[updateURL]
+	);
 
 	return (
 		<div className="mb-6">
@@ -108,14 +144,22 @@ const handleSortChange = useCallback(
 				<div>{error}</div>
 			) : (
 				<div className="space-y-2">
-					<div className="flex justify-end gap-4">
-						<SortColumn
-							sortField={sortField}
-							sortOrder={sortOrder}
-							handleSortChange={handleSortChange}
+					<div className="flex justify-between gap-4">
+						<FilterColumn
+							typeFilter={typeFilter}
+							categoryFilter={categoryFilter}
+							departmentFilter={departmentFilter}
+							handleFilterChange={handleFilterChange}
 						/>
-						{/* Limit selector */}
-						<RowLimit limit={limit} handleLimitChange={handleLimitChange} />
+						<div className="flex gap-4">
+							<SortColumn
+								sortField={sortField}
+								sortOrder={sortOrder}
+								handleSortChange={handleSortChange}
+							/>
+							{/* Limit selector */}
+							<RowLimit limit={limit} handleLimitChange={handleLimitChange} />
+						</div>
 					</div>
 					{isLoading ? (
 						<TableSkeleton rows={limit} columns={columns.length} />

@@ -4,7 +4,8 @@ import Link from "next/link";
 import React from "react";
 import { Button } from "./ui/button";
 import { ThemeToggle } from "./ui/theme-toggle";
-import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { User } from "lucide-react";
 import { useUser } from "@/provider/UserContext";
 import {
 	DropdownMenu,
@@ -59,15 +60,18 @@ export default function Navbar() {
 						</div>
 						<DropdownMenu>
 							<DropdownMenuTrigger>
-								<Image
-									src={
-										user.profileImg || "https://i.ibb.co.com/pJ8HzFy/60111.jpg"
-									}
-									alt={`${user.lastName}'s profile`}
-									width={100}
-									height={100}
-									className="size-9 rounded-full border"
-								/>
+								<Avatar className="size-9">
+									{user.profileImg ? (
+										<AvatarImage
+											src={user.profileImg}
+											alt={`${user.firstName} ${user.lastName}`}
+										/>
+									) : (
+										<AvatarFallback>
+											<User className="w-7" />
+										</AvatarFallback>
+									)}
+								</Avatar>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent>
 								<DropdownMenuLabel>My Account</DropdownMenuLabel>
