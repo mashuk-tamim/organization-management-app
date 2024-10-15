@@ -13,8 +13,14 @@ export async function GET(request: NextRequest) {
 		const transactionId = searchParams.get("id");
 		const page = parseInt(searchParams.get("page") || "1", 10);
 		const limit = parseInt(searchParams.get("limit") || "10", 10);
+
+		// Get filters from query params
+		const typeFilter = searchParams.get("type") || null;
+		const categoryFilter = searchParams.get("category") || null;
+		const departmentFilter = searchParams.get("department") || null;
+
 		// for sorting
-    const sortField = searchParams.get("sortField") || null;
+		const sortField = searchParams.get("sortField") || null;
 		const sortOrder = searchParams.get("sortOrder") || "default";
 
 		// Connect to the database
@@ -46,9 +52,15 @@ export async function GET(request: NextRequest) {
 			return NextResponse.json({ transaction });
 		}
 
-		// If no transaction ID, fetch all transactions (paginated)
 		const skip = (page - 1) * limit;
-		const query = Transaction.find().skip(skip).limit(limit);
+
+		// Build query object with filters
+		const filters: any = {};
+		if (typeFilter) filters.type = typeFilter;
+		if (categoryFilter) filters.category = categoryFilter;
+    if (departmentFilter) filters.department = departmentFilter;
+    
+		const query = Transaction.find(filters).skip(skip).limit(limit);
 
 		// Apply sorting only if sortOrder is not "default"
 		if (sortField && (sortOrder === "asc" || sortOrder === "desc")) {
@@ -58,7 +70,7 @@ export async function GET(request: NextRequest) {
 
 		const transactions: ITransaction[] = await query;
 
-		const totalTransactions = await Transaction.countDocuments();
+		const totalTransactions = await Transaction.countDocuments(filters);
 
 		return NextResponse.json({
 			data: transactions,

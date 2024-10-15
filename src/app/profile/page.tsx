@@ -3,11 +3,10 @@
 import { useUser } from "@/provider/UserContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { User } from "lucide-react";
 import { IUser } from "@/types/user.interface";
-
 
 export default function ProfilePage() {
 	const { user, loading } = useUser();

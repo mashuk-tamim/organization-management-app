@@ -1,4 +1,4 @@
-import { model, models , Schema } from "mongoose";
+import { model, models, Schema } from "mongoose";
 import { IUser } from "../../types/user.interface";
 
 export const userSchema = new Schema<IUser>(
@@ -28,8 +28,8 @@ export const userSchema = new Schema<IUser>(
 
 		password: {
 			type: String,
-      // required: [true, "Password is required"],
-      select: false,
+			// required: [true, "Password is required"],
+			select: false,
 			minlength: [8, "Password must be more than or equal to 8 characters"],
 		},
 
@@ -49,7 +49,6 @@ export const userSchema = new Schema<IUser>(
 		profileImg: {
 			type: String,
 			trim: true,
-			default: "https://i.ibb.co.com/pJ8HzFy/60111.jpg",
 		},
 	},
 	{
