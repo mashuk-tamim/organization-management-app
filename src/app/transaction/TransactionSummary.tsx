@@ -3,12 +3,13 @@ import { Label } from "@/components/ui/label";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import useTopExpenseCategory from "@/hooks/useTopExpenseCategory";
 import useTopIncomeCategory from "@/hooks/useTopIncomeCategory";
-import { TransactionSummaryProps } from "@/types/transactionSummary.type";
+import { useTransactionContext } from "@/provider/TransactionContext";
+// import { TransactionSummaryProps } from "@/types/transactionSummary.type";
 
 export default function TransactionSummary({
-	transactions,
-	loading,
-}: TransactionSummaryProps) {
+
+}) {
+  const { transactions, loading } = useTransactionContext();
 	const totalIncome = transactions
 		.filter((transaction) => transaction.type === "Income")
 		.reduce((sum, transaction) => sum + transaction.amount, 0);
