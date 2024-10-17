@@ -5,13 +5,6 @@ import { Suspense } from "react";
 import TransactionHistory from "./TransactionHistory";
 import TransactionSummary from "./TransactionSummary";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { ITransaction } from "@/types/transaction.interface";
-
-export type initialDataType = {
-	data: ITransaction[];
-	currentPage: number;
-	totalPages: number;
-};
 
 export default function TransactionPage() {
 

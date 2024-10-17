@@ -45,6 +45,7 @@ export const userValidationSchema = z.object({
 
 	contactNumber: z.string().min(1, { message: "Contact number is required" }),
 	profileImg: z.string().url().optional(),
+	isDeleted: z.boolean().optional(),
 });
 
 export type RegisterFormData = z.infer<typeof userValidationSchema>;

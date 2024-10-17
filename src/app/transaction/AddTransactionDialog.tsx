@@ -24,9 +24,9 @@ import {
 	addTransaction,
 	TransactionState,
 } from "@/server/actions/transaction.action";
-import { useTransactionContext } from "@/provider/TransactionContext";
 import { useTransactionFormFieldValidation } from "@/hooks/useTransactionFormFieldValidation";
 import { FormField } from "@/components/ui/transaction-form-field";
+import { useRouter } from "next/navigation";
 
 export default function AddTransactionDialog() {
 	const [open, setOpen] = useState(false);
@@ -34,35 +34,33 @@ export default function AddTransactionDialog() {
 		"Income" | "Expense" | null
 	>(null);
 
-	const { fetchTransactions } = useTransactionContext();
+	const router = useRouter();
 
 	const formRef = useRef<HTMLFormElement>(null);
 
 	const [state, formAction] = useFormState<TransactionState, FormData>(
 		addTransaction,
 		null
-  );
+	);
 
-  const { errors, validateField } = useTransactionFormFieldValidation();
+	const { errors, validateField } = useTransactionFormFieldValidation();
 
-  const handleFieldChange = (fieldName: string) => (value: string | number) => {
+	const handleFieldChange = (fieldName: string) => (value: string | number) => {
 		validateField(fieldName as keyof TransactionState, value);
 	};
-  
+
 	// This useEffect will run after a successful transaction is added
 	useEffect(() => {
-		if (state?.success) {
-      fetchTransactions();
+		if (state?.success && state.data) {
+      router.refresh();
 			toast.success(state.message);
-
 			// Reset form fields and state
 			formRef.current?.reset();
 			setTransactionType(null);
-
 			setOpen(false); // Close the modal
 			state.success = false;
 		}
-	}, [state, fetchTransactions]);
+	}, [state, router]);
 
 	const incomeCategories = ["Project Completion", "Service Sale"];
 	const expenseCategories = ["Salary", "Utilities"];
@@ -199,88 +197,88 @@ export default function AddTransactionDialog() {
 	);
 }
 
-				// <form action={formAction} ref={formRef} className="space-y-4">
-				// 	{/* Date Field */}
-				// 	<div className="space-y-2">
-				// 		<Label htmlFor="date">Date</Label>
-				// 		<Input id="date" name="date" type="date" />
-				// 	</div>
+// <form action={formAction} ref={formRef} className="space-y-4">
+// 	{/* Date Field */}
+// 	<div className="space-y-2">
+// 		<Label htmlFor="date">Date</Label>
+// 		<Input id="date" name="date" type="date" />
+// 	</div>
 
-				// 	{/* Type Field */}
-				// 	<div className="space-y-2">
-				// 		<Label htmlFor="type">Type</Label>
-				// 		<Select
-				// 			name="type"
-				// 			onValueChange={(value) => {
-				// 				setTransactionType(value as "Income" | "Expense");
-				// 			}}
-				// 		>
-				// 			<SelectTrigger>
-				// 				<SelectValue placeholder="Select a type" />
-				// 			</SelectTrigger>
-				// 			<SelectContent>
-				// 				<SelectItem value="Income">Income</SelectItem>
-				// 				<SelectItem value="Expense">Expense</SelectItem>
-				// 			</SelectContent>
-				// 		</Select>
-				// 	</div>
+// 	{/* Type Field */}
+// 	<div className="space-y-2">
+// 		<Label htmlFor="type">Type</Label>
+// 		<Select
+// 			name="type"
+// 			onValueChange={(value) => {
+// 				setTransactionType(value as "Income" | "Expense");
+// 			}}
+// 		>
+// 			<SelectTrigger>
+// 				<SelectValue placeholder="Select a type" />
+// 			</SelectTrigger>
+// 			<SelectContent>
+// 				<SelectItem value="Income">Income</SelectItem>
+// 				<SelectItem value="Expense">Expense</SelectItem>
+// 			</SelectContent>
+// 		</Select>
+// 	</div>
 
-				// 	{/* Category Field */}
-				// 	<div className="space-y-2">
-				// 		<Label htmlFor="category">Category</Label>
-				// 		<Select name="category" disabled={!transactionType}>
-				// 			<SelectTrigger>
-				// 				<SelectValue placeholder="Select a category" />
-				// 			</SelectTrigger>
-				// 			<SelectContent>
-				// 				{transactionType === "Income" && (
-				// 					<SelectGroup>
-				// 						{incomeCategories.map((category) => (
-				// 							<SelectItem key={category} value={category}>
-				// 								{category}
-				// 							</SelectItem>
-				// 						))}
-				// 					</SelectGroup>
-				// 				)}
-				// 				{transactionType === "Expense" && (
-				// 					<SelectGroup>
-				// 						{expenseCategories.map((category) => (
-				// 							<SelectItem key={category} value={category}>
-				// 								{category}
-				// 							</SelectItem>
-				// 						))}
-				// 					</SelectGroup>
-				// 				)}
-				// 			</SelectContent>
-				// 		</Select>
-				// 	</div>
+// 	{/* Category Field */}
+// 	<div className="space-y-2">
+// 		<Label htmlFor="category">Category</Label>
+// 		<Select name="category" disabled={!transactionType}>
+// 			<SelectTrigger>
+// 				<SelectValue placeholder="Select a category" />
+// 			</SelectTrigger>
+// 			<SelectContent>
+// 				{transactionType === "Income" && (
+// 					<SelectGroup>
+// 						{incomeCategories.map((category) => (
+// 							<SelectItem key={category} value={category}>
+// 								{category}
+// 							</SelectItem>
+// 						))}
+// 					</SelectGroup>
+// 				)}
+// 				{transactionType === "Expense" && (
+// 					<SelectGroup>
+// 						{expenseCategories.map((category) => (
+// 							<SelectItem key={category} value={category}>
+// 								{category}
+// 							</SelectItem>
+// 						))}
+// 					</SelectGroup>
+// 				)}
+// 			</SelectContent>
+// 		</Select>
+// 	</div>
 
-				// 	{/* Amount Field */}
-				// 	<div className="space-y-2">
-				// 		<Label htmlFor="amount">Amount</Label>
-				// 		<Input name="amount" type="number" required />
-				// 	</div>
+// 	{/* Amount Field */}
+// 	<div className="space-y-2">
+// 		<Label htmlFor="amount">Amount</Label>
+// 		<Input name="amount" type="number" required />
+// 	</div>
 
-				// 	{/* Department Field */}
-				// 	<div className="space-y-2">
-				// 		<Label htmlFor="department">Department</Label>
-				// 		<Select name="department">
-				// 			<SelectTrigger>
-				// 				<SelectValue placeholder="Select a department" />
-				// 			</SelectTrigger>
-				// 			<SelectContent>
-				// 				<SelectItem value="Development">Development</SelectItem>
-				// 				<SelectItem value="Design">Design</SelectItem>
-				// 				<SelectItem value="Others">Others</SelectItem>
-				// 			</SelectContent>
-				// 		</Select>
-				// 	</div>
+// 	{/* Department Field */}
+// 	<div className="space-y-2">
+// 		<Label htmlFor="department">Department</Label>
+// 		<Select name="department">
+// 			<SelectTrigger>
+// 				<SelectValue placeholder="Select a department" />
+// 			</SelectTrigger>
+// 			<SelectContent>
+// 				<SelectItem value="Development">Development</SelectItem>
+// 				<SelectItem value="Design">Design</SelectItem>
+// 				<SelectItem value="Others">Others</SelectItem>
+// 			</SelectContent>
+// 		</Select>
+// 	</div>
 
-				// 	{/* Submit Button */}
-				// 	<SubmitButton buttonText="Add Transaction" />
+// 	{/* Submit Button */}
+// 	<SubmitButton buttonText="Add Transaction" />
 
-				// 	{/* Display errors */}
-				// 	{state?.error && (
-				// 		<p className="text-sm text-red-500">{state.error}</p>
-				// 	)}
-				// </form>
+// 	{/* Display errors */}
+// 	{state?.error && (
+// 		<p className="text-sm text-red-500">{state.error}</p>
+// 	)}
+// </form>

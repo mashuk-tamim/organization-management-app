@@ -30,7 +30,11 @@ export const columns: ColumnDef<ITransaction>[] = [
 		cell: ({ row }) => {
 			const transaction = row.original;
 
-			return <TransactionActions transaction={transaction} />;
+			return (
+				<TransactionActions
+					transaction={transaction}
+				/>
+			);
 		},
 	},
 ];
