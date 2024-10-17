@@ -12,27 +12,27 @@ import FilterColumn from "./filter-column";
 
 export default function TransactionHistory() {
 	const router = useRouter();
-	const searchParams = useSearchParams(); // To access query params from URL
+	const searchParams = useSearchParams();
 
 	const [transactions, setTransactions] = useState<ITransaction[]>([]);
 	const [totalPages, setTotalPages] = useState(1);
 	const [error, setError] = useState<string | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const [typeFilter, setTypeFilter] = useState<string | null>(null);
+  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+  const [departmentFilter, setDepartmentFilter] = useState<string | null>(null);
 	const [sortField, setSortField] = useState<string | null>(null);
 	const [sortOrder, setSortOrder] = useState<"default" | "asc" | "desc">(
 		"default"
 	);
-
-	console.log(sortOrder, sortField);
-	console.log("transactions: ", transactions);
-
-	const currentPage = Number(searchParams.get("page") || "1");
-	const limit = Number(searchParams.get("limit") || "10");
-
-	// New state for filters
-	const [typeFilter, setTypeFilter] = useState<string | null>(null);
-	const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
-	const [departmentFilter, setDepartmentFilter] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(
+    Number(searchParams.get("page") || "1")
+  );
+  const [limit, setLimit] = useState<number>(
+    Number(searchParams.get("limit") || "10")
+  );
+  
 
 	const fetchTransactions = useCallback(async () => {
 		setIsLoading(true);
@@ -62,7 +62,7 @@ export default function TransactionHistory() {
 		currentPage,
 		limit,
 		sortField,
-		sortOrder,
+    sortOrder,
 		typeFilter,
 		categoryFilter,
 		departmentFilter,
@@ -87,52 +87,6 @@ export default function TransactionHistory() {
 		[router, searchParams]
 	);
 
-	const handlePageChange = useCallback(
-		(newPage: number) => {
-			updateURL({ page: newPage.toString() });
-		},
-		[updateURL]
-	);
-
-	const handleLimitChange = useCallback(
-		(newLimit: number) => {
-			updateURL({ page: "1", limit: newLimit.toString() });
-		},
-		[updateURL]
-	);
-
-	const handleSortChange = useCallback(
-		(newField: string | null, newOrder: "default" | "asc" | "desc") => {
-			setSortField(newField);
-			setSortOrder(newOrder);
-
-			if (newOrder === "default" || newField === null) {
-				updateURL({ page: "1", sortField: "", sortOrder: "" });
-			} else {
-				updateURL({ page: "1", sortField: newField, sortOrder: newOrder });
-			}
-		},
-		[updateURL]
-	);
-
-	const handleFilterChange = useCallback(
-		(filterType: string, value: string | null) => {
-			switch (filterType) {
-				case "type":
-					setTypeFilter(value);
-					break;
-				case "category":
-					setCategoryFilter(value);
-					break;
-				case "department":
-					setDepartmentFilter(value);
-					break;
-			}
-			updateURL({ page: "1", [filterType]: value || "" });
-		},
-		[updateURL]
-	);
-
 	return (
 		<div className="mb-6">
 			<div className="flex justify-between items-center mb-4">
@@ -149,16 +103,21 @@ export default function TransactionHistory() {
 							typeFilter={typeFilter}
 							categoryFilter={categoryFilter}
 							departmentFilter={departmentFilter}
-							handleFilterChange={handleFilterChange}
+							setTypeFilter={setTypeFilter}
+							setCategoryFilter={setCategoryFilter}
+							setDepartmentFilter={setDepartmentFilter}
+							updateURL={updateURL}
 						/>
 						<div className="flex gap-4">
 							<SortColumn
 								sortField={sortField}
+								setSortField={setSortField}
 								sortOrder={sortOrder}
-								handleSortChange={handleSortChange}
+								setSortOrder={setSortOrder}
+								updateURL={updateURL}
 							/>
 							{/* Limit selector */}
-							<RowLimit limit={limit} handleLimitChange={handleLimitChange} />
+                <RowLimit limit={limit} setLimit={setLimit} updateURL={updateURL} />
 						</div>
 					</div>
 					{isLoading ? (
@@ -169,9 +128,10 @@ export default function TransactionHistory() {
 						<>
 							<DataTable columns={columns} data={transactions} />
 							<DataTablePagination
-								currentPage={currentPage}
 								totalPages={totalPages}
-								onPageChange={handlePageChange}
+								currentPage={currentPage}
+								setCurrentPage={setCurrentPage}
+								updateURL={updateURL}
 							/>
 						</>
 					) : (

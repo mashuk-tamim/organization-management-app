@@ -5,22 +5,30 @@ import {
 	DoubleArrowLeftIcon,
 	DoubleArrowRightIcon,
 } from "@radix-ui/react-icons";
-
+import { useCallback } from "react";
 
 interface DataTablePaginationProps {
 	currentPage: number;
 	totalPages: number;
-  onPageChange: (newPage: number) => void;
-  setCurrentPage?: (newPage: number) => void;
+	setCurrentPage: (newPage: number) => void;
+	updateURL: (newParams: Record<string, string>) => void;
 }
 
 export function DataTablePagination({
+	totalPages,
 	currentPage,
-  totalPages,
-  onPageChange: handlePageChange,
-  // setCurrentPage,
-}: DataTablePaginationProps) {
-  
+	setCurrentPage,
+	updateURL,
+}: // onPageChange: handlePageChange,
+DataTablePaginationProps) {
+	const handlePageChange = useCallback(
+		(newPage: number) => {
+			setCurrentPage(newPage);
+			updateURL({ page: newPage.toString() });
+		},
+		[updateURL, setCurrentPage]
+	);
+
 	return (
 		<div className="flex w-full flex-col items-center justify-end gap-4 overflow-auto px-2 sm:flex-row sm:gap-8">
 			<div className="flex items-center space-x-2">
