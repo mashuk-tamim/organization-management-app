@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import ViewTransactionDialog from "./view-transaction-dialog";
 import { ITransaction } from "@/types/transaction.interface";
-import { useTransactionContext } from "@/provider/TransactionContext";
+// import { useTransactionContext } from "@/provider/TransactionContext";
 import { useRouter } from "next/navigation";
 
 export default function TransactionActions({
@@ -19,7 +19,6 @@ export default function TransactionActions({
 }: {
 	transaction: ITransaction;
   }) {
-  const { setTransactions } = useTransactionContext();
 	const transactionId = transaction._id!;
 	const [dialogOpen, setDialogOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -43,13 +42,13 @@ export default function TransactionActions({
 		console.log("will delete", transactionId);
 		try {
 			const response = await fetch(
-				`/api/transaction/delete-transaction/${transactionId}`,
+				`/api/transaction/delete-transaction`,
 				{
 					method: "PATCH", // Use PATCH for updating `isDeleted` field
 					headers: {
 						"Content-Type": "application/json",
 					},
-					body: JSON.stringify({ isDeleted: true }), // Sending the updated field in the body
+					body: JSON.stringify({ transactionId }), // Sending the updated field in the body
 				}
       );
       
@@ -58,9 +57,6 @@ export default function TransactionActions({
 			if (response.ok) {
 				// Remove the transaction from the state after soft deletion
         router.refresh();
-				// setTransactions((prev) =>
-				// 	prev.filter((txn) => txn._id !== transactionId)
-				// );
         console.log("Transaction deleted:", transactionId);
 			} else {
 				console.error("Failed to delete transaction");
@@ -68,7 +64,7 @@ export default function TransactionActions({
 		} catch (error) {
 			console.error("Error deleting transaction:", error);
 		}
-	}, [setTransactions, router]);
+	}, [router]);
 
 	return (
 		<div className="relative">

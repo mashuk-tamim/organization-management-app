@@ -33,7 +33,7 @@ export const TransactionProvider = ({
 			setLoading(true);
 			const result = await getAllTransactions();
 			if (result.success && result.data) {
-				setTransactions(result.data);
+        setTransactions(result.data);
 			} else {
 				setErrorMessage(result.error || "Failed to fetch transactions");
 			}
@@ -42,11 +42,11 @@ export const TransactionProvider = ({
 			console.error("Error fetching transactions:", error);
 			setLoading(false);
 		}
-	},[setTransactions])
+	}, [ setTransactions]);
 
 	useEffect(() => {
     fetchTransactions();
-	}, [fetchTransactions, setTransactions]);
+	}, [fetchTransactions]);
 
 	return (
 		<TransactionContext.Provider

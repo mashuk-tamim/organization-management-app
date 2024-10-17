@@ -24,7 +24,6 @@ import {
 	addTransaction,
 	TransactionState,
 } from "@/server/actions/transaction.action";
-import { useTransactionContext } from "@/provider/TransactionContext";
 import { useTransactionFormFieldValidation } from "@/hooks/useTransactionFormFieldValidation";
 import { FormField } from "@/components/ui/transaction-form-field";
 import { useRouter } from "next/navigation";
@@ -35,7 +34,6 @@ export default function AddTransactionDialog() {
 		"Income" | "Expense" | null
 	>(null);
 
-	const { transactions, fetchTransactions } = useTransactionContext();
 	const router = useRouter();
 
 	const formRef = useRef<HTMLFormElement>(null);
@@ -53,20 +51,16 @@ export default function AddTransactionDialog() {
 
 	// This useEffect will run after a successful transaction is added
 	useEffect(() => {
-    console.log(transactions);
 		if (state?.success && state.data) {
-			fetchTransactions();
-			router.refresh();
+      router.refresh();
 			toast.success(state.message);
-
 			// Reset form fields and state
 			formRef.current?.reset();
 			setTransactionType(null);
-
 			setOpen(false); // Close the modal
 			state.success = false;
 		}
-	}, [state, router, fetchTransactions, transactions]);
+	}, [state, router]);
 
 	const incomeCategories = ["Project Completion", "Service Sale"];
 	const expenseCategories = ["Salary", "Utilities"];
