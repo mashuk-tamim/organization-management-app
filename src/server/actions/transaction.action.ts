@@ -101,9 +101,10 @@ export async function addTransaction(
 
 // Fetch all transactions
 export async function getAllTransactions() {
+  const filters: any = { isDeleted: { $ne: true } };
 	try {
 		await connectDB(); // Connect to the database
-		const transactions = await Transaction.find();
+		const transactions = await Transaction.find(filters);
 
 		// Convert MongoDB documents into plain JavaScript objects
 		const plainTransactions = transactions.map((transaction) => {

@@ -3,7 +3,7 @@
 import { getAllTransactions } from "@/server/actions/transaction.action";
 import { ITransaction } from "@/types/transaction.interface";
 import { TransactionContextType } from "@/types/transactionContext.type";
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, { createContext, useState, useEffect, useContext, useCallback } from "react";
 
 const TransactionContext = createContext<TransactionContextType | undefined>(
 	undefined
@@ -28,7 +28,7 @@ export const TransactionProvider = ({
 	const [loading, setLoading] = useState(true);
 	const [errorMessage, setErrorMessage] = useState("");
 
-	const fetchTransactions = async () => {
+	const fetchTransactions = useCallback(async () => {
 		try {
 			setLoading(true);
 			const result = await getAllTransactions();
@@ -42,11 +42,11 @@ export const TransactionProvider = ({
 			console.error("Error fetching transactions:", error);
 			setLoading(false);
 		}
-	};
+	},[setTransactions])
 
 	useEffect(() => {
-		fetchTransactions();
-	}, []);
+    fetchTransactions();
+	}, [fetchTransactions, setTransactions]);
 
 	return (
 		<TransactionContext.Provider

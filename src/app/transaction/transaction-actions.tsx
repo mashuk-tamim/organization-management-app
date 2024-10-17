@@ -11,15 +11,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import ViewTransactionDialog from "./view-transaction-dialog";
 import { ITransaction } from "@/types/transaction.interface";
+import { useTransactionContext } from "@/provider/TransactionContext";
+import { useRouter } from "next/navigation";
 
 export default function TransactionActions({
-	transaction,
+  transaction,
 }: {
 	transaction: ITransaction;
-}) {
+  }) {
+  const { setTransactions } = useTransactionContext();
 	const transactionId = transaction._id!;
 	const [dialogOpen, setDialogOpen] = useState(false);
-	const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  
+  const router = useRouter();
 
 	const handleOpenDialog = useCallback(() => {
 		setDialogOpen(true);
@@ -33,6 +38,37 @@ export default function TransactionActions({
 	const handleDropdownOpenChange = useCallback((open: boolean) => {
 		setDropdownOpen(open);
 	}, []);
+
+	const handleDeleteTransaction = useCallback(async (transactionId: string) => {
+		console.log("will delete", transactionId);
+		try {
+			const response = await fetch(
+				`/api/transaction/delete-transaction/${transactionId}`,
+				{
+					method: "PATCH", // Use PATCH for updating `isDeleted` field
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ isDeleted: true }), // Sending the updated field in the body
+				}
+      );
+      
+      console.log(response);
+
+			if (response.ok) {
+				// Remove the transaction from the state after soft deletion
+        router.refresh();
+				// setTransactions((prev) =>
+				// 	prev.filter((txn) => txn._id !== transactionId)
+				// );
+        console.log("Transaction deleted:", transactionId);
+			} else {
+				console.error("Failed to delete transaction");
+			}
+		} catch (error) {
+			console.error("Error deleting transaction:", error);
+		}
+	}, [setTransactions, router]);
 
 	return (
 		<div className="relative">
@@ -53,9 +89,14 @@ export default function TransactionActions({
 					>
 						Copy transaction ID
 					</DropdownMenuItem>
-					<DropdownMenuSeparator />
 					<DropdownMenuItem onClick={handleOpenDialog}>
 						View Transaction Details
+					</DropdownMenuItem>
+					<DropdownMenuSeparator />
+					<DropdownMenuItem
+						onClick={() => handleDeleteTransaction(transactionId)}
+					>
+						Delete Transaction
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>

@@ -14,7 +14,7 @@ export default function TransactionHistory() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 
-	const [transactions, setTransactions] = useState<ITransaction[]>([]);
+	const [transactions, setTransactions] = useState< ITransaction[]>([]);
 	const [totalPages, setTotalPages] = useState(1);
 	const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,7 +49,7 @@ export default function TransactionHistory() {
 			const res = await fetch(apiUrl);
 			if (!res.ok) throw new Error("Failed to fetch transactions");
 
-			const data = await res.json();
+			const data: DataType = await res.json();
 			setTransactions(data.data);
 			setTotalPages(data.totalPages);
 		} catch (error) {
@@ -58,7 +58,7 @@ export default function TransactionHistory() {
 		} finally {
 			setIsLoading(false);
 		}
-	}, [
+  }, [
 		currentPage,
 		limit,
 		sortField,
@@ -91,11 +91,11 @@ export default function TransactionHistory() {
 		<div className="mb-6">
 			<div className="flex justify-between items-center mb-4">
 				<h2 className="text-xl font-semibold">Transaction History</h2>
-				<AddTransactionDialog />
+				<AddTransactionDialog/>
 			</div>
 
 			{error ? (
-				<div>{error}</div>
+				<div className="text-red-500">{error}</div>
 			) : (
 				<div className="space-y-2">
 					<div className="flex justify-between gap-4">
@@ -117,13 +117,17 @@ export default function TransactionHistory() {
 								updateURL={updateURL}
 							/>
 							{/* Limit selector */}
-                <RowLimit limit={limit} setLimit={setLimit} updateURL={updateURL} />
+							<RowLimit
+								limit={limit}
+								setLimit={setLimit}
+								updateURL={updateURL}
+							/>
 						</div>
 					</div>
 					{isLoading ? (
 						<TableSkeleton rows={limit} columns={columns.length} />
 					) : error ? (
-						<div>{error}</div>
+						<div className="text-red-500">{error}</div>
 					) : transactions.length > 0 ? (
 						<>
 							<DataTable columns={columns} data={transactions} />
@@ -135,7 +139,7 @@ export default function TransactionHistory() {
 							/>
 						</>
 					) : (
-						<div>No transactions found.</div>
+						<div className="text-red-500">No transactions found.</div>
 					)}
 				</div>
 			)}
@@ -143,8 +147,10 @@ export default function TransactionHistory() {
 	);
 }
 
-export type initialDataType = {
+type DataType = {
 	data: ITransaction[];
 	currentPage: number;
 	totalPages: number;
 };
+
+
