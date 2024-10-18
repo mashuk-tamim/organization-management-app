@@ -2,7 +2,7 @@
 
 import connectDB from "@/server/config/db";
 import Transaction from "@/server/models/transaction.model";
-import mongoose from "mongoose";
+import { Types } from "mongoose";
 import { ITransaction } from "@/types/transaction.interface";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
 			console.log("Received request for transaction ID:", transactionId);
 
 			// Validate if transactionId is a valid ObjectId
-			if (!mongoose.Types.ObjectId.isValid(transactionId)) {
+			if (!Types.ObjectId.isValid(transactionId)) {
 				return NextResponse.json(
 					{ error: "Invalid transaction ID" },
 					{ status: 400 }
@@ -60,7 +60,6 @@ export async function GET(request: NextRequest) {
 
 		const skip = (page - 1) * limit;
 
-		// Build query object with filters
 		// Build query object with filters
 		const filters: any = {
 			...baseFilters, // Include base filters in all queries

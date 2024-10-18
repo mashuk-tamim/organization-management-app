@@ -30,7 +30,7 @@ DataTablePaginationProps) {
 	);
 
 	return (
-		<div className="flex w-full flex-col items-center justify-end gap-4 overflow-auto px-2 sm:flex-row sm:gap-8">
+		<div className="flex w-full flex-col items-center justify-end gap-4 overflow-auto px-2 sm:flex-row sm:gap-4">
 			<div className="flex items-center space-x-2">
 				<Button
 					size="icon"

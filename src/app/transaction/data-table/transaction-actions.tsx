@@ -39,7 +39,7 @@ export default function TransactionActions({
 	}, []);
 
 	const handleDeleteTransaction = useCallback(async (transactionId: string) => {
-		console.log("will delete", transactionId);
+		// console.log("will delete", transactionId);
 		try {
 			const response = await fetch(
 				`/api/transaction/delete-transaction`,
