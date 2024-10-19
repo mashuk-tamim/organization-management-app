@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { ComponentType, useCallback, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { columns } from "./data-table/columns";
@@ -8,8 +8,13 @@ import RowLimit from "./data-table/row-limit";
 import SortColumn from "./data-table/sort-column";
 import TableSkeleton from "./data-table/table-skeleton";
 import FilterColumn from "./data-table/filter-column";
-const DataTable = dynamic(() => import("./data-table/data-table"));
+import { DataTableProps } from "./data-table/data-table";
 const AddTransactionDialog = dynamic(() => import("./AddTransactionDialog"));
+
+// Type the dynamic import
+const DataTable = dynamic(
+	() => import("./data-table/data-table")
+) as ComponentType<DataTableProps<ITransaction, unknown>>;
 
 export default function TransactionHistory() {
 	const router = useRouter();
@@ -92,7 +97,7 @@ export default function TransactionHistory() {
 		<div className="mb-6">
 			<div className="flex justify-between items-center mb-4">
 				<h2 className="text-xl font-semibold">Transaction History</h2>
-				<AddTransactionDialog/>
+				<AddTransactionDialog />
 			</div>
 
 			{error ? (
