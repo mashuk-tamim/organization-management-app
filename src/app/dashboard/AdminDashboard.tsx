@@ -1,15 +1,16 @@
 "use client";
-
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import TimeFrameSelector from "./TimeFrameSelector";
-import ProfitLossChart from "./ProfitLossChart";
-import IncomeExpenseChart from "./IncomeExpenseChart";
-import FinancialStatement from "./FinancialStatement";
 import { DashboardData, TimeFrame } from "../../types/dashboardData.type";
 import useFinancialData from "@/hooks/useFinancialData";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useTransactionContext } from "@/provider/TransactionContext";
+
+const FinancialStatement = dynamic(() => import("./FinancialStatement"))
+const IncomeExpenseChart = dynamic(() => import("./IncomeExpenseChart"))
+const ProfitLossChart = dynamic(() => import("./ProfitLossChart"))
 
 export default function AdminDashboard() {
 	const [timeFrame, setTimeFrame] = useState<TimeFrame>("monthly");

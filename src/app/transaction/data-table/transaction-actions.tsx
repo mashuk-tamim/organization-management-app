@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import ViewTransactionDialog from "./view-transaction-dialog";
 import { ITransaction } from "@/types/transaction.interface";
-// import { useTransactionContext } from "@/provider/TransactionContext";
 import { useRouter } from "next/navigation";
 
 export default function TransactionActions({
@@ -39,7 +38,7 @@ export default function TransactionActions({
 	}, []);
 
 	const handleDeleteTransaction = useCallback(async (transactionId: string) => {
-		console.log("will delete", transactionId);
+		// console.log("will delete", transactionId);
 		try {
 			const response = await fetch(
 				`/api/transaction/delete-transaction`,

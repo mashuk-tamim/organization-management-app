@@ -1,14 +1,20 @@
-import { useCallback, useEffect, useState } from "react";
+import { ComponentType, useCallback, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import AddTransactionDialog from "./AddTransactionDialog";
-import { DataTable } from "./data-table";
-import { columns } from "./columns";
-import { DataTablePagination } from "./data-table-pagination";
+import dynamic from "next/dynamic";
+import { columns } from "./data-table/columns";
+import { DataTablePagination } from "./data-table/data-table-pagination";
 import { ITransaction } from "@/types/transaction.interface";
-import RowLimit from "./row-limit";
-import SortColumn from "./sort-column";
-import TableSkeleton from "./table-skeleton";
-import FilterColumn from "./filter-column";
+import RowLimit from "./data-table/row-limit";
+import SortColumn from "./data-table/sort-column";
+import TableSkeleton from "./data-table/table-skeleton";
+import FilterColumn from "./data-table/filter-column";
+import { DataTableProps } from "./data-table/data-table";
+const AddTransactionDialog = dynamic(() => import("./AddTransactionDialog"));
+
+// Type the dynamic import
+const DataTable = dynamic(
+	() => import("./data-table/data-table")
+) as ComponentType<DataTableProps<ITransaction, unknown>>;
 
 export default function TransactionHistory() {
 	const router = useRouter();
@@ -91,14 +97,14 @@ export default function TransactionHistory() {
 		<div className="mb-6">
 			<div className="flex justify-between items-center mb-4">
 				<h2 className="text-xl font-semibold">Transaction History</h2>
-				<AddTransactionDialog/>
+				<AddTransactionDialog />
 			</div>
 
 			{error ? (
 				<div className="text-red-500">{error}</div>
 			) : (
 				<div className="space-y-2">
-					<div className="flex justify-between gap-4">
+					<div className="flex flex-wrap justify-between gap-4">
 						<FilterColumn
 							typeFilter={typeFilter}
 							categoryFilter={categoryFilter}
@@ -108,7 +114,7 @@ export default function TransactionHistory() {
 							setDepartmentFilter={setDepartmentFilter}
 							updateURL={updateURL}
 						/>
-						<div className="flex gap-4">
+						<div className="flex flex-wrap gap-4">
 							<SortColumn
 								sortField={sortField}
 								setSortField={setSortField}

@@ -52,7 +52,7 @@ export default function FilterColumn({
 	return (
 		<div>
 			{/* Filter controls */}
-			<div className="flex gap-4">
+			<div className="flex flex-wrap gap-4">
 				<Select
 					value={typeFilter || "all"}
 					onValueChange={(value) => {
