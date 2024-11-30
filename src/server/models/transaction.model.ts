@@ -16,11 +16,17 @@ const transactionSchema: Schema = new Schema<ITransaction>(
 			enum: ["Development", "Design", "Others"],
 			required: true,
 		},
+		isDeleted: {
+			type: Boolean,
+			default: false,
+			index: true, // Add index for better query performance
+		},
 	},
 	{
 		timestamps: true,
 	}
 );
 
-const Transaction = models?.Transaction || model<ITransaction>("Transaction", transactionSchema);
+const Transaction =
+	models?.Transaction || model<ITransaction>("Transaction", transactionSchema);
 export default Transaction;

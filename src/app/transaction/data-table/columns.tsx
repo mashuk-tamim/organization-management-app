@@ -30,19 +30,12 @@ export const columns: ColumnDef<ITransaction>[] = [
 		cell: ({ row }) => {
 			const transaction = row.original;
 
-			return <TransactionActions transaction={transaction} />;
+			return (
+				<TransactionActions
+					transaction={transaction}
+				/>
+			);
 		},
 	},
 ];
 
-// cell: ({ row }) => {
-// 			const amount = parseFloat(row.getValue("amount"));
-// 			const formatted = new Intl.NumberFormat("en-US", {
-// 				style: "currency",
-// 				currency: "USD",
-// 				minimumFractionDigits: 0, // No decimal digits
-// 				maximumFractionDigits: 0, // No decimal digits
-// 			}).format(amount);
-
-// 			return <div className="">{formatted}</div>;
-// 		},

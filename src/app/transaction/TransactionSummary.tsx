@@ -4,7 +4,6 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import useTopExpenseCategory from "@/hooks/useTopExpenseCategory";
 import useTopIncomeCategory from "@/hooks/useTopIncomeCategory";
 import { useTransactionContext } from "@/provider/TransactionContext";
-// import { TransactionSummaryProps } from "@/types/transactionSummary.type";
 
 export default function TransactionSummary({
 

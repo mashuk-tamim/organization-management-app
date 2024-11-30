@@ -1,17 +1,11 @@
 // app/transaction/TransactionPage.tsx
 "use client";
 
+import dynamic from "next/dynamic";
 import { Suspense } from "react";
-import TransactionHistory from "./TransactionHistory";
-import TransactionSummary from "./TransactionSummary";
+const TransactionHistory = dynamic(() => import("./TransactionHistory"));
+const TransactionSummary = dynamic(() => import("./TransactionSummary"));
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { ITransaction } from "@/types/transaction.interface";
-
-export type initialDataType = {
-	data: ITransaction[];
-	currentPage: number;
-	totalPages: number;
-};
 
 export default function TransactionPage() {
 

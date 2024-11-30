@@ -6,7 +6,7 @@ This web application allows users to manage transactions and view data in a dash
 
 ## Features
 
-- **Transaction Management**: Users can add, view, and manage transactions.
+- **Transaction Management**: Users can add, view, and delete transactions.
 - **Dashboard Overview**: Displays charts and transaction summaries (weekly, monthly, yearly).
 - **Client and Server-Side Validation**: Ensures that all data is validated properly both client-side (using Zod) and server-side for secure and error-free transactions.
 - **Secure Login with Http-only Cookie**: Provides a secure login system using encrypted cookies to store JWT tokens.
@@ -48,7 +48,7 @@ This web application allows users to manage transactions and view data in a dash
 - **Role-Based Authorization**: Implement user roles and permissions for different functionalities within the app.
 - **Google & GitHub Login**: Add Google and GitHub providers for user login.
 - **Redux**: Implement redux for complex state management.
-- **React Query**: Immplement React Query for advanced features.
+- **React Query**: Implement React Query for advanced features.
 
 
 ## How to Run the Project

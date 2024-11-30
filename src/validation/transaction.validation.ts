@@ -31,5 +31,5 @@ export const transactionValidationSchema = z.object({
 	// Department is already handled
 	department: z.enum(["Development", "Design", "Others"], {
 		required_error: "Department is required",
-	}),
+  }),
 });

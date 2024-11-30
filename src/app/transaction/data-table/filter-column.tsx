@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
 	Select,
 	SelectContent,
@@ -11,24 +11,48 @@ type FilterColumnProps = {
 	typeFilter: string | null;
 	categoryFilter: string | null;
 	departmentFilter: string | null;
-	handleFilterChange: (arg1: string, arg2: string | null) => void;
+	setTypeFilter: (typeFilter: string | null) => void;
+	setCategoryFilter: (categoryFilter: string | null) => void;
+	setDepartmentFilter: (departmentFilter: string | null) => void;
+	updateURL: (newParams: Record<string, string>) => void;
 };
 
 export default function FilterColumn({
 	typeFilter,
 	categoryFilter,
 	departmentFilter,
-	handleFilterChange,
+	setTypeFilter,
+	setCategoryFilter,
+  setDepartmentFilter,
+  updateURL,
 }: FilterColumnProps) {
 	const [transactionType, setTransactionType] = useState<
 		"Income" | "Expense" | "all"
 	>("all");
 	const incomeCategories = ["Project Completion", "Service Sale"];
-	const expenseCategories = ["Salary", "Utilities"];
+  const expenseCategories = ["Salary", "Utilities"];
+  
+  const handleFilterChange = useCallback(
+		(filterType: string, value: string | null) => {
+			switch (filterType) {
+				case "type":
+					setTypeFilter(value);
+					break;
+				case "category":
+					setCategoryFilter(value);
+					break;
+				case "department":
+					setDepartmentFilter(value);
+					break;
+			}
+			updateURL({ page: "1", [filterType]: value || "" });
+		},
+		[updateURL, setTypeFilter, setCategoryFilter, setDepartmentFilter]
+	);
 	return (
 		<div>
 			{/* Filter controls */}
-			<div className="flex gap-4">
+			<div className="flex flex-wrap gap-4">
 				<Select
 					value={typeFilter || "all"}
 					onValueChange={(value) => {
@@ -91,7 +115,7 @@ export default function FilterColumn({
 					onValueChange={(value) =>
 						handleFilterChange("department", value === "all" ? null : value)
 					}
-        >
+				>
 					<SelectTrigger className="w-[180px]">
 						<SelectValue placeholder="Filter by Department" />
 					</SelectTrigger>

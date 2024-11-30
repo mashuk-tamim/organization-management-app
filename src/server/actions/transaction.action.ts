@@ -39,7 +39,7 @@ export async function addTransaction(
 				| "Development"
 				| "Design"
 				| "Others",
-		};
+    };
 
 		// Validate the data
 		const validatedData = transactionValidationSchema.parse(rawTransactionData);
@@ -81,15 +81,6 @@ export async function addTransaction(
 			};
 		}
 
-		// Handle duplicate transaction error
-		if (error.code === 11000) {
-			return {
-				success: false,
-				error: "This transaction already exists",
-				data: null,
-			};
-		}
-
 		// Catch-all error handler
 		return {
 			success: false,
@@ -101,9 +92,10 @@ export async function addTransaction(
 
 // Fetch all transactions
 export async function getAllTransactions() {
+  const filters = { isDeleted: { $ne: true } };
 	try {
 		await connectDB(); // Connect to the database
-		const transactions = await Transaction.find();
+		const transactions = await Transaction.find(filters);
 
 		// Convert MongoDB documents into plain JavaScript objects
 		const plainTransactions = transactions.map((transaction) => {
